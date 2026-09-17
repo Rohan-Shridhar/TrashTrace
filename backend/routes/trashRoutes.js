@@ -1,5 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 const router = express.Router();
 const Trash = require('../models/Trash');
 const Scan = require('../models/Scan');
@@ -22,32 +23,69 @@ const isValidCoordinate = (lat, lon) => {
 
 // POST /api/trash - Create a new trash shipment
 router.post('/', async (req, res) => {
+  let debugStage = 'Request received';
+  let trackingId;
+
+  console.log('[TrashTrace DEBUG]', debugStage, {
+    method: req.method,
+    path: req.originalUrl,
+    bodyKeys: Object.keys(req.body || {}),
+  });
+
   try {
-    const { trashType, description, destination, sourceLatitude, sourceLongitude, ownerToken } = req.body;
+    const { trashType, description, destination, sourceLatitude, sourceLongitude, ownerToken } = req.body || {};
+
+    debugStage = 'Input validation';
+    console.log('[TrashTrace DEBUG]', debugStage, {
+      hasTrashType: Boolean(trashType),
+      hasDestination: Boolean(destination),
+      hasSourceCoordinates: sourceLatitude !== undefined && sourceLongitude !== undefined,
+      hasDescription: Boolean(description),
+      hasOwnerToken: Boolean(ownerToken),
+    });
 
     if (!trashType || !destination || sourceLatitude === undefined || sourceLongitude === undefined) {
+      console.log('[TrashTrace DEBUG]', 'Input validation failed', { reason: 'Missing required fields' });
       return res.status(400).json({ error: 'trashType, destination, sourceLatitude and sourceLongitude are required.' });
     }
 
     if (!isValidCoordinate(sourceLatitude, sourceLongitude)) {
+      console.log('[TrashTrace DEBUG]', 'Input validation failed', { reason: 'Invalid source coordinates' });
       return res.status(400).json({ error: 'Invalid source coordinates.' });
     }
 
     if (typeof trashType !== 'string' || trashType.trim().length > 100) {
+      console.log('[TrashTrace DEBUG]', 'Input validation failed', { reason: 'Invalid trash type' });
       return res.status(400).json({ error: 'Invalid trash type.' });
     }
 
     if (typeof destination !== 'string' || destination.trim().length < 3) {
+      console.log('[TrashTrace DEBUG]', 'Input validation failed', { reason: 'Invalid destination' });
       return res.status(400).json({ error: 'Destination must be at least 3 characters.' });
     }
 
+    debugStage = 'MongoDB connection';
+    const dbState = mongoose.connection.readyState;
+    console.log('[TrashTrace DEBUG]', debugStage, {
+      readyState: dbState,
+      connected: dbState === 1,
+    });
+    if (dbState !== 1) {
+      const error = new Error(`MongoDB connection is not ready (readyState: ${dbState}).`);
+      console.error('[TrashTrace DEBUG]', error);
+      throw error;
+    }
+
+    debugStage = 'Nominatim geocoding request';
     const destCoordinates = await geocodeAddress(destination.trim());
     if (!destCoordinates) {
+      const error = new Error('Geocoder returned no coordinates.');
+      console.error('[TrashTrace DEBUG]', error);
       return res.status(400).json({ error: 'Could not resolve destination address. Please be more specific.' });
     }
 
     // Generate unique Tracking ID
-    let trackingId;
+    debugStage = 'Trash document construction';
     let attempts = 0;
     while (attempts < 5) {
       trackingId = crypto.randomBytes(4).toString('hex').toUpperCase();
@@ -56,6 +94,8 @@ router.post('/', async (req, res) => {
       attempts++;
     }
     if (!trackingId) {
+      const error = new Error('Could not generate a unique tracking ID after 5 attempts.');
+      console.error('[TrashTrace DEBUG]', error);
       return res.status(500).json({ error: 'Could not generate a unique tracking ID. Please try again.' });
     }
 
@@ -77,15 +117,25 @@ router.post('/', async (req, res) => {
       },
       status: 'CREATED'
     });
+    console.log('[TrashTrace DEBUG]', debugStage, {
+      trackingId,
+      hasDestinationCoordinates: true,
+      hasOwnerToken: Boolean(ownerToken),
+    });
 
+    debugStage = 'Trash.save()';
+    console.log('[TrashTrace DEBUG]', debugStage, { trackingId });
     await newTrash.save();
+    console.log('[TrashTrace DEBUG]', 'Trash.save() completed', { trackingId });
 
     // Build tracking URL using env var or the origin header
+    debugStage = 'Response generation';
     const baseUrl = process.env.PUBLIC_URL
       || req.headers.origin
       || 'https://trashtrace.vercel.app';
 
     const trackingUrl = `${baseUrl}/track/${trackingId}`;
+    console.log('[TrashTrace DEBUG]', debugStage, { trackingId });
 
     return res.status(201).json({
       trackingId,
@@ -94,6 +144,8 @@ router.post('/', async (req, res) => {
     });
 
   } catch (error) {
+    console.error('[TrashTrace DEBUG]', error);
+    console.error('[TrashTrace DEBUG]', { failedStage: debugStage, trackingId: trackingId || null });
     console.error('[POST /api/trash]', error.message);
     return res.status(500).json({ error: 'Server error while creating shipment.' });
   }
