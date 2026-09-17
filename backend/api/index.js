@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config({ path: '../.env' }); // To load from root during dev
 const connectDB = require('../config/db');
+const trashRoutes = require('../routes/trashRoutes');
 
 const app = express();
 
@@ -12,6 +13,8 @@ app.use(express.json());
 if (process.env.NODE_ENV !== 'production') {
   connectDB();
 }
+
+app.use('/api/trash', trashRoutes);
 
 app.get('/api/health', async (req, res) => {
   res.json({

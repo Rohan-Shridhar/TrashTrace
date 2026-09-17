@@ -1,5 +1,6 @@
 import { Routes, Route, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import CreateShipment from './pages/CreateShipment';
 
 function Home() {
   const [health, setHealth] = useState('Checking backend...');
@@ -30,47 +31,6 @@ function Home() {
           <button className="btn" style={{ backgroundColor: 'transparent', border: '1px solid var(--primary-color)' }}>
             Demo Track
           </button>
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-function CreateShipment() {
-  return (
-    <div className="card">
-      <h2>Create New Shipment</h2>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
-        Enter details to generate a tracking QR code.
-      </p>
-      
-      <form>
-        <div>
-          <label>Destination Location</label>
-          <input type="text" placeholder="e.g. Recycling Center A" />
-        </div>
-        <div>
-          <label>Trash Type</label>
-          <select>
-            <option>Plastic</option>
-            <option>Electronic Waste</option>
-            <option>Organic</option>
-            <option>Hazardous</option>
-          </select>
-        </div>
-        <div>
-          <label>Description (Optional)</label>
-          <textarea rows="3" placeholder="Additional details..."></textarea>
-        </div>
-        
-        <button className="btn" type="button" style={{ width: '100%' }}>
-          Generate Tracking QR
-        </button>
-      </form>
-      
-      <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-        <Link to="/" style={{ color: 'var(--primary-color)', textDecoration: 'none' }}>
-          &larr; Back to Home
         </Link>
       </div>
     </div>
