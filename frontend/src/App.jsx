@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import CreateShipment from './pages/CreateShipment';
 import TrackShipment from './pages/TrackShipment';
 import ScanQR from './pages/ScanQR';
+import OwnerDashboard from './pages/OwnerDashboard';
 
 function Home() {
   const [health, setHealth] = useState('Checking backend...');
@@ -26,6 +27,9 @@ function Home() {
       </div>
 
       <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <Link to="/dashboard" style={{ flex: '1 1 auto' }}>
+          <button className="btn" style={{ width: '100%', backgroundColor: '#10b981' }}>My Dashboard</button>
+        </Link>
         <Link to="/create" style={{ flex: '1 1 auto' }}>
           <button className="btn" style={{ width: '100%' }}>Create Shipment</button>
         </Link>
@@ -42,6 +46,7 @@ function App() {
     <div className="container">
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/dashboard" element={<OwnerDashboard />} />
         <Route path="/create" element={<CreateShipment />} />
         <Route path="/scan" element={<ScanQR />} />
         <Route path="/track/:id" element={<TrackShipment />} />

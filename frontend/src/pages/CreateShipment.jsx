@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCurrentLocation } from '../utils/geolocation';
+import { getOwnerToken } from '../utils/owner';
 import QRCodeDisplay from '../components/QRCodeDisplay';
 
 const CreateShipment = () => {
@@ -54,6 +55,8 @@ const CreateShipment = () => {
     setIsSubmitting(true);
     
     try {
+      const ownerToken = getOwnerToken();
+      
       const response = await fetch('/api/trash', {
         method: 'POST',
         headers: {
@@ -62,7 +65,8 @@ const CreateShipment = () => {
         body: JSON.stringify({
           ...formData,
           sourceLatitude: location.latitude,
-          sourceLongitude: location.longitude
+          sourceLongitude: location.longitude,
+          ownerToken
         })
       });
 

@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const trashSchema = new mongoose.Schema({
+  ownerToken: {
+    type: String,
+    index: true,
+  },
   trackingId: {
     type: String,
     required: true,
