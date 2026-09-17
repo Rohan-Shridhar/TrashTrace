@@ -6,10 +6,17 @@ if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
 }
 
+const hasMongoUri = () => Boolean(process.env.MONGO_URI && String(process.env.MONGO_URI).trim());
+
+const isMongoConnected = () => mongoose.connection.readyState === 1;
+
 const connectDB = async () => {
-  if (!process.env.MONGO_URI) {
-    console.warn('[DB] MONGO_URI not set. Skipping database connection.');
-    return null;
+  const mongoUriConfigured = hasMongoUri();
+  console.log('[DB] MONGO_URI present:', mongoUriConfigured);
+
+  if (!mongoUriConfigured) {
+    console.error('[DB] MongoDB connection failed: MONGO_URI is missing.');
+    throw new Error('MONGO_URI is not set.');
   }
 
   if (cached.conn) {
@@ -24,16 +31,22 @@ const connectDB = async () => {
       socketTimeoutMS: 45000,
     };
 
-    cached.promise = mongoose.connect(process.env.MONGO_URI, opts).then((mongoose) => {
-      console.log('[DB] MongoDB connected successfully.');
-      return mongoose;
-    });
+    cached.promise = mongoose.connect(process.env.MONGO_URI, opts)
+      .then((connection) => {
+        console.log('[DB] MongoDB connected successfully.');
+        return connection;
+      })
+      .catch((err) => {
+        console.error('[DB] MongoDB connection failed:', err.message);
+        throw err;
+      });
   }
 
   try {
     cached.conn = await cached.promise;
   } catch (err) {
     cached.promise = null;
+    console.error('[DB] MongoDB connection failed:', err.message);
     throw err;
   }
 
@@ -41,3 +54,5 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
+module.exports.hasMongoUri = hasMongoUri;
+module.exports.isMongoConnected = isMongoConnected;
