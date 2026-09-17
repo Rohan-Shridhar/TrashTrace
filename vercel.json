@@ -1,11 +1,12 @@
 {
-  "version": 2,
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "builds": [
     {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist",
+        "routePrefix": "/"
       }
     },
     {
@@ -22,7 +23,7 @@
       "handle": "filesystem"
     },
     {
-      "src": "/(.*)",
+      "src": "/((?!api(?:/|$)|assets(?:/|$)).*)",
       "dest": "/index.html"
     }
   ]
