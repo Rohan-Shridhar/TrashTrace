@@ -64,6 +64,8 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Destination must be at least 3 characters.' });
     }
 
+    console.log('[TrashTrace DEBUG]', 'Input validation succeeded');
+
     debugStage = 'MongoDB connection';
     const dbState = mongoose.connection.readyState;
     console.log('[TrashTrace DEBUG]', debugStage, {
@@ -72,12 +74,15 @@ router.post('/', async (req, res) => {
     });
     if (dbState !== 1) {
       const error = new Error(`MongoDB connection is not ready (readyState: ${dbState}).`);
-      console.error('[TrashTrace DEBUG]', error);
+      error.status = 503;
+      console.error('[TrashTrace DEBUG]', error.message);
       throw error;
     }
 
     debugStage = 'Nominatim geocoding request';
+    console.log('[TrashTrace DEBUG]', 'Geocoding start');
     const destCoordinates = await geocodeAddress(destination.trim());
+    console.log('[TrashTrace DEBUG]', 'Geocoding end', { success: Boolean(destCoordinates) });
     if (!destCoordinates) {
       const error = new Error('Geocoder returned no coordinates.');
       console.error('[TrashTrace DEBUG]', error);
@@ -125,8 +130,17 @@ router.post('/', async (req, res) => {
 
     debugStage = 'Trash.save()';
     console.log('[TrashTrace DEBUG]', debugStage, { trackingId });
-    await newTrash.save();
-    console.log('[TrashTrace DEBUG]', 'Trash.save() completed', { trackingId });
+    try {
+      await newTrash.save();
+      console.log('[TrashTrace DEBUG]', 'Trash.save() success', { trackingId });
+    } catch (saveError) {
+      console.error('[TrashTrace DEBUG]', 'Trash.save() failure', {
+        trackingId,
+        name: saveError.name,
+        message: saveError.message,
+      });
+      throw saveError;
+    }
 
     // Build tracking URL using env var or the origin header
     debugStage = 'Response generation';
@@ -144,10 +158,21 @@ router.post('/', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('[TrashTrace DEBUG]', error);
+    console.error('[TrashTrace DEBUG]', error.message);
     console.error('[TrashTrace DEBUG]', { failedStage: debugStage, trackingId: trackingId || null });
     console.error('[POST /api/trash]', error.message);
-    return res.status(500).json({ error: 'Server error while creating shipment.' });
+
+    const mongoUnavailable =
+      error.status === 503 ||
+      mongoose.connection.readyState !== 1 ||
+      /mongo|MONGO_URI|database/i.test(error.message || '') ||
+      /Mongo|Mongoose/.test(error.name || '');
+
+    if (mongoUnavailable) {
+      return res.status(503).json({ error: 'Database temporarily unavailable.' });
+    }
+
+    return res.status(error.status || 500).json({ error: 'Server error while creating shipment.' });
   }
 });
 

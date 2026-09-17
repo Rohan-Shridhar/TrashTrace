@@ -1,9 +1,19 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
+const dotenv = require('dotenv');
+
+// Local .env files only. On Vercel, MONGO_URI comes from process.env (project settings).
+// dotenv does not override variables that are already set.
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
 const connectDB = require('../config/db');
+const { isMongoConnected, hasMongoUri } = connectDB;
+
+console.log('[DB] MONGO_URI present:', hasMongoUri());
 const trashRoutes = require('../routes/trashRoutes');
 const notificationRoutes = require('../routes/notificationRoutes');
 
@@ -48,28 +58,45 @@ const scanLimiter = rateLimit({
 app.use('/api/', apiLimiter);
 app.use('/api/trash/:trackingId/scan', scanLimiter);
 
+const sendDatabaseUnavailable = (res) => {
+  return res.status(503).json({ error: 'Database temporarily unavailable.' });
+};
+
+// Health must still respond when MongoDB is down so clients can see DB status.
+app.get('/api/health', async (req, res) => {
+  try {
+    await connectDB();
+  } catch (err) {
+    console.error('[DB] Health check connection error:', err.message);
+  }
+
+  const connected = isMongoConnected();
+  const payload = {
+    status: connected ? 'ok' : 'error',
+    database: connected ? 'connected' : 'disconnected',
+  };
+
+  return res.status(connected ? 200 : 503).json(payload);
+});
+
 // --- DB Connection for every serverless invocation ---
 app.use(async (req, res, next) => {
   try {
     await connectDB();
+    if (!isMongoConnected()) {
+      console.error('[DB] MongoDB is not connected after connectDB().');
+      return sendDatabaseUnavailable(res);
+    }
     next();
   } catch (err) {
     console.error('[DB] Connection error:', err.message);
-    res.status(503).json({ error: 'Database temporarily unavailable.' });
+    return sendDatabaseUnavailable(res);
   }
 });
 
 // --- Routes ---
 app.use('/api/trash', trashRoutes);
 app.use('/api/notifications', notificationRoutes);
-
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    timestamp: new Date(),
-    message: 'TrashTrace API is running',
-  });
-});
 
 // --- Global Error Handler (no stack traces in production) ---
 app.use((err, req, res, next) => {
