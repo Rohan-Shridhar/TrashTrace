@@ -71,5 +71,94 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: 'Server error while creating trash shipment' });
   }
 });
+// GET /api/trash/:trackingId - Get tracking information
+router.get('/:trackingId', async (req, res) => {
+  try {
+    const trash = await Trash.findOne({ trackingId: req.params.trackingId });
+    if (!trash) {
+      return res.status(404).json({ error: 'Tracking ID not found' });
+    }
+    res.json(trash);
+  } catch (error) {
+    console.error('Error fetching trash:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// POST /api/trash/:trackingId/scan - Record a scan
+const Scan = require('../models/Scan');
+const { calculateDistance } = require('../utils/distance');
+const DELIVERY_RADIUS_METERS = process.env.DELIVERY_RADIUS_METERS || 500;
+
+router.post('/:trackingId/scan', async (req, res) => {
+  try {
+    const { latitude, longitude } = req.body;
+    
+    if (latitude === undefined || longitude === undefined) {
+      return res.status(400).json({ error: 'Scan coordinates are required' });
+    }
+
+    const trash = await Trash.findOne({ trackingId: req.params.trackingId });
+    if (!trash) {
+      return res.status(404).json({ error: 'Tracking ID not found' });
+    }
+
+    // Coordinates are stored as [longitude, latitude] in GeoJSON
+    const destLon = trash.destination.location.coordinates[0];
+    const destLat = trash.destination.location.coordinates[1];
+
+    const distance = calculateDistance(latitude, longitude, destLat, destLon);
+    const isNearDestination = distance <= DELIVERY_RADIUS_METERS;
+
+    // Record the scan
+    const scanRecord = new Scan({
+      trashId: trash._id,
+      trackingId: trash.trackingId,
+      location: {
+        type: 'Point',
+        coordinates: [longitude, latitude],
+      },
+      distanceFromDestination: distance,
+      isNearDestination,
+      scannedAt: new Date()
+    });
+    
+    await scanRecord.save();
+
+    // Update Trash record
+    trash.latestScan = {
+      location: {
+        type: 'Point',
+        coordinates: [longitude, latitude],
+      },
+      scannedAt: scanRecord.scannedAt
+    };
+
+    if (isNearDestination) {
+      // Only set delivered if it wasn't already
+      if (trash.status !== 'DELIVERED') {
+        trash.status = 'DELIVERED';
+        trash.deliveredAt = scanRecord.scannedAt;
+      }
+    } else {
+      if (trash.status === 'CREATED') {
+        trash.status = 'IN_TRANSIT';
+      }
+    }
+
+    await trash.save();
+
+    res.json({
+      message: isNearDestination ? 'QR scanned near destination' : 'Scan recorded successfully',
+      distance,
+      isNearDestination,
+      status: trash.status
+    });
+
+  } catch (error) {
+    console.error('Error recording scan:', error);
+    res.status(500).json({ error: 'Server error while recording scan' });
+  }
+});
 
 module.exports = router;
