@@ -4,20 +4,15 @@ import { getCurrentLocation } from '../utils/geolocation';
 import { getOwnerToken } from '../utils/owner';
 import QRCodeDisplay from '../components/QRCodeDisplay';
 
+const TRASH_TYPES = ['Plastic', 'Electronic Waste', 'Organic', 'Glass', 'Paper', 'Metal', 'Hazardous', 'Other'];
+
 const CreateShipment = () => {
-  const [formData, setFormData] = useState({
-    trashType: 'Plastic',
-    description: '',
-    destination: ''
-  });
-  
+  const [formData, setFormData] = useState({ trashType: 'Plastic', description: '', destination: '' });
   const [location, setLocation] = useState(null);
   const [isLocating, setIsLocating] = useState(false);
   const [locationError, setLocationError] = useState('');
-  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
-  
   const [createdData, setCreatedData] = useState(null);
 
   const handleInputChange = (e) => {
@@ -41,48 +36,26 @@ const CreateShipment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError('');
-    
-    if (!location) {
-      setSubmitError('Please obtain your current location first.');
-      return;
-    }
 
-    if (!formData.destination.trim()) {
-      setSubmitError('Please enter a destination.');
-      return;
-    }
+    if (!location) { setSubmitError('Please obtain your current location first.'); return; }
+    if (!formData.destination.trim()) { setSubmitError('Please enter a destination.'); return; }
 
     setIsSubmitting(true);
-    
     try {
-      const ownerToken = getOwnerToken();
-      
-      const response = await fetch('/api/trash', {
+      const res = await fetch('/api/trash', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
           sourceLatitude: location.latitude,
           sourceLongitude: location.longitude,
-          ownerToken
-        })
+          ownerToken: getOwnerToken(),
+        }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create shipment');
-      }
-
-      setCreatedData({
-        trackingId: data.trackingId,
-        trackingUrl: data.trackingUrl,
-        trashType: formData.trashType,
-        destination: formData.destination
-      });
-
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to create shipment.');
+      setCreatedData({ trackingId: data.trackingId, trackingUrl: data.trackingUrl, trashType: formData.trashType, destination: formData.destination });
     } catch (err) {
       setSubmitError(err.message);
     } finally {
@@ -92,126 +65,89 @@ const CreateShipment = () => {
 
   if (createdData) {
     return (
-      <div className="card" style={{ maxWidth: '600px', margin: '0 auto' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Shipment Created!</h2>
-        <QRCodeDisplay 
-          trackingId={createdData.trackingId} 
-          trackingUrl={createdData.trackingUrl}
-          trashType={createdData.trashType}
-          destination={createdData.destination}
-        />
-        <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-          <button 
-            className="btn" 
-            style={{ backgroundColor: 'transparent', border: '1px solid var(--border-color)' }}
-            onClick={() => {
-              setCreatedData(null);
-              setFormData({ trashType: 'Plastic', description: '', destination: '' });
-              setLocation(null);
-            }}
-          >
-            Create Another
-          </button>
-          <br /><br />
-          <Link to="/" style={{ color: 'var(--primary-color)', textDecoration: 'none' }}>
-            &larr; Back to Home
-          </Link>
+      <div className="page-container fade-up">
+        <div className="card" style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🎉</div>
+          <h2 style={{ marginBottom: '0.5rem' }}>Shipment Created!</h2>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
+            Attach the QR code below to your waste package.
+          </p>
+          <QRCodeDisplay
+            trackingId={createdData.trackingId}
+            trackingUrl={createdData.trackingUrl}
+            trashType={createdData.trashType}
+            destination={createdData.destination}
+          />
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', flexWrap: 'wrap' }}>
+            <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => { setCreatedData(null); setFormData({ trashType: 'Plastic', description: '', destination: '' }); setLocation(null); }}>
+              Create Another
+            </button>
+            <Link to="/dashboard" className="btn" style={{ flex: 1, textDecoration: 'none' }}>
+              View Dashboard
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="card" style={{ maxWidth: '600px', margin: '0 auto' }}>
-      <h2 style={{ marginBottom: '0.5rem' }}>Create New Tracking</h2>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
-        Enter shipment details to generate a tracking QR code.
-      </p>
-      
-      {submitError && (
-        <div style={{ padding: '1rem', backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', borderRadius: '0.5rem', marginBottom: '1.5rem', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-          {submitError}
-        </div>
-      )}
-      
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '0.5rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Source Location</label>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
-            <button 
-              type="button" 
-              className="btn" 
-              onClick={handleGetLocation} 
-              disabled={isLocating}
-              style={{ flex: 1, backgroundColor: location ? '#10b981' : 'var(--primary-color)' }}
-            >
-              {isLocating ? 'Locating...' : (location ? 'Location Updated' : 'Get Current Location')}
-            </button>
-            <div style={{ flex: 2, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-              {location ? (
-                <>Lat: {location.latitude.toFixed(4)}<br/>Lng: {location.longitude.toFixed(4)}</>
-              ) : (
-                'Location required for tracking.'
-              )}
+    <div className="page-container fade-up">
+      <div className="card">
+        <h2 style={{ marginBottom: '0.5rem' }}>New Shipment</h2>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem', fontSize: '0.95rem' }}>
+          Fill in the details to generate a tracking QR code for your waste package.
+        </p>
+
+        {submitError && <div className="alert alert-error">{submitError}</div>}
+
+        <form onSubmit={handleSubmit} noValidate>
+          {/* Location */}
+          <div style={{ marginBottom: '1.5rem', padding: '1.25rem', background: 'rgba(0,0,0,0.2)', borderRadius: '0.75rem', border: '1px solid var(--border-color)' }}>
+            <label className="form-label">Your Current Location (Source)</label>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+              <button type="button" className={`btn ${location ? 'btn-success' : ''}`} onClick={handleGetLocation} disabled={isLocating} style={{ flex: '1 1 auto' }}>
+                {isLocating ? 'Locating…' : location ? '✓ Location Obtained' : '📍 Get My Location'}
+              </button>
+              <div style={{ flex: '2 1 auto', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                {location
+                  ? `Lat: ${location.latitude.toFixed(5)}, Lng: ${location.longitude.toFixed(5)}`
+                  : 'Your location is required and never shared publicly.'}
+              </div>
             </div>
+            {locationError && <p style={{ color: 'var(--error-color)', marginTop: '0.5rem', fontSize: '0.875rem' }}>{locationError}</p>}
           </div>
-          {locationError && <p style={{ color: '#ef4444', marginTop: '0.5rem', fontSize: '0.9rem' }}>{locationError}</p>}
-        </div>
 
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem' }}>Destination Address/Name</label>
-          <input 
-            type="text" 
-            name="destination"
-            value={formData.destination}
-            onChange={handleInputChange}
-            placeholder="e.g. City Recycling Center, 123 Main St" 
-            required
-          />
-        </div>
+          {/* Destination */}
+          <div className="form-group">
+            <label className="form-label" htmlFor="destination">Destination (Address or Name)</label>
+            <input id="destination" name="destination" type="text" value={formData.destination} onChange={handleInputChange}
+              placeholder="e.g. Bengaluru City Recycling Center" required />
+          </div>
 
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem' }}>Trash Type</label>
-          <select 
-            name="trashType" 
-            value={formData.trashType}
-            onChange={handleInputChange}
-          >
-            <option value="Plastic">Plastic</option>
-            <option value="Electronic Waste">Electronic Waste</option>
-            <option value="Organic">Organic</option>
-            <option value="Glass">Glass</option>
-            <option value="Paper">Paper</option>
-            <option value="Hazardous">Hazardous</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
+          {/* Trash Type */}
+          <div className="form-group">
+            <label className="form-label" htmlFor="trashType">Waste Type</label>
+            <select id="trashType" name="trashType" value={formData.trashType} onChange={handleInputChange}>
+              {TRASH_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+          </div>
 
-        <div style={{ marginBottom: '1.5rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem' }}>Description (Optional)</label>
-          <textarea 
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            rows="3" 
-            placeholder="Additional details about the package..."
-          ></textarea>
+          {/* Description */}
+          <div className="form-group">
+            <label className="form-label" htmlFor="description">Description (Optional)</label>
+            <textarea id="description" name="description" value={formData.description} onChange={handleInputChange}
+              rows="3" placeholder="Additional details about the package contents…" maxLength={500} />
+          </div>
+
+          <button className="btn" type="submit" disabled={isSubmitting} style={{ width: '100%', padding: '1rem', fontSize: '1rem', marginTop: '0.5rem' }}>
+            {isSubmitting ? 'Generating…' : 'Generate Tracking QR Code'}
+          </button>
+        </form>
+
+        <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+          <Link to="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.875rem' }}>Cancel</Link>
         </div>
-        
-        <button 
-          className="btn" 
-          type="submit" 
-          disabled={isSubmitting}
-          style={{ width: '100%', padding: '1rem', fontSize: '1.1rem' }}
-        >
-          {isSubmitting ? 'Creating Shipment...' : 'Generate Tracking QR'}
-        </button>
-      </form>
-      
-      <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-        <Link to="/" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.9rem' }}>
-          &larr; Cancel and return home
-        </Link>
       </div>
     </div>
   );
