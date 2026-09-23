@@ -241,7 +241,7 @@ function Home() {
             </p>
           </div>
 
-          <div className="workflow-grid">
+          <div className="workflow-grid stagger-children">
             {workflow.map((step) => (
               <div
                 className="workflow-item"
@@ -266,7 +266,7 @@ function Home() {
           CAPABILITIES
           ======================================== */}
 
-      <section className="home-capabilities">
+      <section className="home-capabilities stagger-children">
         <div className="home-container">
           <div className="section-heading section-heading-centered">
             <span className="section-eyebrow">
