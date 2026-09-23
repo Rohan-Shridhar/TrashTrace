@@ -1,0 +1,561 @@
+/* =========================================================
+   TRASHTRACE — RESPONSIVE POLISH
+   Concept 15
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   GLOBAL MOBILE SAFETY
+   --------------------------------------------------------- */
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+
+/* ---------------------------------------------------------
+   TABLET
+   --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .container,
+  .page-container {
+    width: min(100% - 32px, var(--container-lg, 1180px));
+  }
+
+  /* General grids */
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Hero layouts */
+  .hero,
+  .hero-content,
+  .hero-grid,
+  .home-hero,
+  .create-hero {
+    grid-template-columns: 1fr;
+  }
+
+  /* Dashboard layouts */
+  .dashboard-grid,
+  .dashboard-content,
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  /* Tracking layouts */
+  .tracking-grid,
+  .tracking-content,
+  .tracking-layout {
+    grid-template-columns: 1fr;
+  }
+
+  /* Route cards */
+  .route-grid,
+  .route-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 650px) {
+
+  /* -----------------------------------------
+     PAGE WIDTH
+     ----------------------------------------- */
+
+  .container,
+  .page-container {
+    width: min(100% - 24px, var(--container-lg, 1180px));
+  }
+
+  main {
+    width: 100%;
+  }
+
+
+  /* -----------------------------------------
+     GENERAL SPACING
+     ----------------------------------------- */
+
+  section {
+    scroll-margin-top: 80px;
+  }
+
+  .page-section {
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+
+  .section-header,
+  .tracking-section-heading,
+  .dashboard-section-heading {
+    gap: 12px;
+  }
+
+
+  /* -----------------------------------------
+     TYPOGRAPHY
+     ----------------------------------------- */
+
+  h1 {
+    font-size: clamp(2rem, 9vw, 2.8rem);
+    line-height: 1.08;
+  }
+
+  h2 {
+    font-size: clamp(1.4rem, 6vw, 2rem);
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  p {
+    line-height: 1.65;
+  }
+
+
+  /* -----------------------------------------
+     BUTTONS
+     ----------------------------------------- */
+
+  .btn {
+    min-height: 46px;
+  }
+
+  .btn--full,
+  .button-full,
+  .full-width {
+    width: 100%;
+  }
+
+  .button-group,
+  .button-row,
+  .hero-actions,
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .button-group > *,
+  .button-row > *,
+  .hero-actions > *,
+  .form-actions > * {
+    width: 100%;
+  }
+
+
+  /* -----------------------------------------
+     CARDS
+     ----------------------------------------- */
+
+  .card {
+    border-radius: var(--radius-lg, 16px);
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+
+  /* -----------------------------------------
+     FORMS
+     ----------------------------------------- */
+
+  .form-grid,
+  .create-form-grid,
+  .shipment-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row,
+  .input-row {
+    flex-direction: column;
+  }
+
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+  }
+
+  textarea {
+    min-height: 120px;
+  }
+
+
+  /* -----------------------------------------
+     HOME PAGE
+     ----------------------------------------- */
+
+  .home-hero {
+    padding-top: 32px;
+    padding-bottom: 48px;
+  }
+
+  .hero-content {
+    text-align: center;
+  }
+
+  .hero-actions {
+    width: 100%;
+  }
+
+  .hero-actions a,
+  .hero-actions button {
+    width: 100%;
+  }
+
+  .workflow-grid,
+  .capabilities-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  /* -----------------------------------------
+     CREATE SHIPMENT
+     ----------------------------------------- */
+
+  .create-shipment-layout,
+  .create-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .create-shipment-form,
+  .create-form {
+    padding: 20px;
+  }
+
+  .location-row,
+  .destination-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .location-row button,
+  .destination-row button {
+    width: 100%;
+  }
+
+
+  /* -----------------------------------------
+     TRACK SHIPMENT
+     ----------------------------------------- */
+
+  .tracking-header,
+  .tracking-hero,
+  .tracking-progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tracking-hero {
+    gap: 18px;
+  }
+
+  .tracking-progress-card {
+    padding: 20px 16px;
+  }
+
+  .tracking-section-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tracking-status-card {
+    width: 100%;
+  }
+
+  .tracking-actions {
+    width: 100%;
+  }
+
+  .tracking-actions button,
+  .tracking-actions a {
+    width: 100%;
+  }
+
+  .package-details-grid,
+  .tracking-details-grid,
+  .shipment-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .route-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  /* -----------------------------------------
+     SHIPMENT PROGRESS
+     ----------------------------------------- */
+
+  .shipment-progress {
+    width: 100%;
+  }
+
+  .shipment-progress__steps {
+    gap: 8px;
+  }
+
+  .shipment-progress__content strong {
+    font-size: 0.82rem;
+  }
+
+  .shipment-progress__content span {
+    font-size: 0.7rem;
+  }
+
+  .shipment-progress__marker {
+    width: 30px;
+    height: 30px;
+    font-size: 0.75rem;
+  }
+
+
+  /* -----------------------------------------
+     SHIPMENT TIMELINE
+     ----------------------------------------- */
+
+  .shipment-timeline {
+    padding-left: 0;
+  }
+
+  .shipment-timeline__event {
+    padding-left: 42px;
+  }
+
+  .shipment-timeline__card {
+    padding: 16px;
+  }
+
+  .shipment-timeline__meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+
+  /* -----------------------------------------
+     QR CARD
+     ----------------------------------------- */
+
+  .qr-card {
+    width: 100%;
+  }
+
+  .qr-card__body {
+    padding: 20px 16px;
+  }
+
+  .qr-card__code {
+    width: min(100%, 260px);
+    margin-inline: auto;
+  }
+
+  .qr-card__actions {
+    flex-direction: column;
+  }
+
+  .qr-card__actions button {
+    width: 100%;
+  }
+
+
+  /* -----------------------------------------
+     SCANNER
+     ----------------------------------------- */
+
+  .scanner-container,
+  .scan-container {
+    width: 100%;
+  }
+
+  .scanner-frame,
+  .scan-frame {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 1;
+  }
+
+  .scanner-actions,
+  .scan-actions {
+    flex-direction: column;
+  }
+
+  .scanner-actions button,
+  .scan-actions button {
+    width: 100%;
+  }
+
+
+  /* -----------------------------------------
+     DASHBOARD
+     ----------------------------------------- */
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .dashboard-actions {
+    width: 100%;
+  }
+
+  .dashboard-actions a,
+  .dashboard-actions button {
+    width: 100%;
+  }
+
+  .dashboard-stats,
+  .stats-grid,
+  .dashboard-stat-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dashboard-filters,
+  .filter-tabs {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .dashboard-filters::-webkit-scrollbar,
+  .filter-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dashboard-filters > *,
+  .filter-tabs > * {
+    flex-shrink: 0;
+  }
+
+  .shipment-card {
+    padding: 18px;
+  }
+
+
+  /* -----------------------------------------
+     TABLES / WIDE CONTENT
+     ----------------------------------------- */
+
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 620px;
+  }
+
+
+  /* -----------------------------------------
+     NAVIGATION
+     ----------------------------------------- */
+
+  .navbar {
+    width: 100%;
+  }
+
+  .navbar-container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+
+  /* -----------------------------------------
+     FOOTER
+     ----------------------------------------- */
+
+  .footer,
+  .site-footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .footer-grid,
+  .footer-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   VERY SMALL PHONES
+   --------------------------------------------------------- */
+
+@media (max-width: 400px) {
+
+  .container,
+  .page-container {
+    width: calc(100% - 20px);
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+  }
+
+  .card-body {
+    padding: 16px;
+  }
+
+  .tracking-progress-card {
+    padding: 18px 14px;
+  }
+
+  .shipment-progress__content span {
+    display: none;
+  }
+
+  .dashboard-stats,
+  .stats-grid,
+  .dashboard-stat-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   ACCESSIBILITY — REDUCED MOTION
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
