@@ -39,14 +39,6 @@ const formatDistance = (meters) => {
   return `${(meters / 1000).toFixed(1)} km`;
 };
 
-const getScanTitle = (scan) => {
-  if (scan.isNearDestination) {
-    return 'QR scanned near destination';
-  }
-
-  return 'Transit scan recorded';
-};
-
 const TrackShipment = () => {
   const { trackingId } = useParams();
 
@@ -77,6 +69,7 @@ const TrackShipment = () => {
       }
 
       const trash = await trashResponse.json();
+
       const scans = historyResponse.ok
         ? await historyResponse.json()
         : [];
@@ -84,7 +77,9 @@ const TrackShipment = () => {
       setTrashData(trash);
       setHistory(Array.isArray(scans) ? scans : []);
     } catch (err) {
-      setError(err.message || 'Unable to load tracking information.');
+      setError(
+        err.message || 'Unable to load tracking information.'
+      );
     } finally {
       setLoading(false);
     }
@@ -138,6 +133,10 @@ const TrackShipment = () => {
     }
   };
 
+  /* =========================================================
+     LOADING
+     ========================================================= */
+
   if (loading) {
     return (
       <div className="tracking-loading">
@@ -147,19 +146,32 @@ const TrackShipment = () => {
     );
   }
 
+  /* =========================================================
+     ERROR
+     ========================================================= */
+
   if (error) {
     return (
       <main className="tracking-page">
         <div className="tracking-error">
           <div className="tracking-error-icon">?</div>
 
-          <span className="eyebrow">TRACKING ERROR</span>
+          <span className="eyebrow">
+            TRACKING ERROR
+          </span>
 
-          <h1>Package not found</h1>
+          <h1>
+            Package not found
+          </h1>
 
-          <p>{error}</p>
+          <p>
+            {error}
+          </p>
 
-          <Link to="/" className="tracking-link-button">
+          <Link
+            to="/"
+            className="tracking-link-button"
+          >
             Back to home
           </Link>
         </div>
@@ -167,10 +179,16 @@ const TrackShipment = () => {
     );
   }
 
+  /* =========================================================
+     DERIVED DATA
+     ========================================================= */
+
   const latestScan = history[0];
 
   const latestDistance = latestScan
-    ? formatDistance(latestScan.distanceFromDestination)
+    ? formatDistance(
+        latestScan.distanceFromDestination
+      )
     : null;
 
   const statusLabel =
@@ -180,54 +198,81 @@ const TrackShipment = () => {
         ? 'Delivered'
         : 'Created';
 
+  /* =========================================================
+     PAGE
+     ========================================================= */
+
   return (
     <main className="tracking-page">
       <div className="tracking-container">
 
-        {/* Header */}
-{/* Header */}
-    <section className="tracking-header">
-      <div>
-        <span className="eyebrow">PACKAGE TRACKING</span>
+        {/* =================================================
+            HEADER
+            ================================================= */}
 
-        <h1>
-          Shipment <span>#{trackingId}</span>
-        </h1>
+        <section className="tracking-header">
+          <div>
+            <span className="eyebrow">
+              PACKAGE TRACKING
+            </span>
 
-        <p>
-          Follow the recorded scan history for this waste package.
-        </p>
-      </div>
+            <h1>
+              Shipment <span>#{trackingId}</span>
+            </h1>
 
-      <Badge status={trashData.status}>
-        {statusLabel}
-      </Badge>
-    </section>
+            <p>
+              Follow the recorded scan history for this
+              waste package.
+            </p>
+          </div>
 
-    {/* Shipment progress */}
-    <section className="tracking-progress-card">
-      <div className="tracking-progress-header">
-        <div>
-          <span className="eyebrow">SHIPMENT JOURNEY</span>
+          <Badge status={trashData.status}>
+            {statusLabel}
+          </Badge>
+        </section>
 
-          <h2>Tracking progress</h2>
-        </div>
 
-        <span className="tracking-progress-status">
-          {statusLabel}
-        </span>
-      </div>
+        {/* =================================================
+            SHIPMENT PROGRESS
+            ================================================= */}
 
-      <ShipmentProgress
-        status={trashData.status}
-      />
-    </section>
+        <section className="tracking-progress-card">
 
-        {/* Status hero */}
+          <div className="tracking-progress-header">
+
+            <div>
+              <span className="eyebrow">
+                SHIPMENT JOURNEY
+              </span>
+
+              <h2>
+                Tracking progress
+              </h2>
+            </div>
+
+            <span className="tracking-progress-status">
+              {statusLabel}
+            </span>
+
+          </div>
+
+          <ShipmentProgress
+            status={trashData.status}
+          />
+
+        </section>
+
+
+        {/* =================================================
+            STATUS HERO
+            ================================================= */}
+
         <section
           className={`tracking-status-card tracking-status-${trashData.status.toLowerCase()}`}
         >
+
           <div className="tracking-status-main">
+
             <div className="tracking-status-icon">
               {trashData.status === 'DELIVERED'
                 ? '✓'
@@ -237,40 +282,63 @@ const TrackShipment = () => {
             </div>
 
             <div>
+
               <span className="tracking-status-label">
                 Current status
               </span>
 
-              <h2>{statusLabel}</h2>
+              <h2>
+                {statusLabel}
+              </h2>
 
-              {trashData.status === 'DELIVERED' && trashData.deliveredAt ? (
+              {trashData.status === 'DELIVERED' &&
+              trashData.deliveredAt ? (
                 <p>
                   Last marked near the destination on{' '}
-                  <strong>{formatDate(trashData.deliveredAt)}</strong>.
+                  <strong>
+                    {formatDate(trashData.deliveredAt)}
+                  </strong>.
                 </p>
               ) : latestScan ? (
                 <p>
                   Last scan was{' '}
-                  <strong>{formatDate(latestScan.scannedAt)}</strong>.
+                  <strong>
+                    {formatDate(latestScan.scannedAt)}
+                  </strong>.
                 </p>
               ) : (
                 <p>
                   No location scans have been recorded yet.
                 </p>
               )}
+
             </div>
+
           </div>
 
           {latestDistance && (
             <div className="tracking-distance">
-              <span>Last scan</span>
-              <strong>{latestDistance}</strong>
-              <small>from destination</small>
+              <span>
+                Last scan
+              </span>
+
+              <strong>
+                {latestDistance}
+              </strong>
+
+              <small>
+                from destination
+              </small>
             </div>
           )}
+
         </section>
 
-        {/* Latest scan feedback */}
+
+        {/* =================================================
+            LATEST SCAN FEEDBACK
+            ================================================= */}
+
         {scanResult && (
           <div
             className={`tracking-feedback ${
@@ -279,11 +347,15 @@ const TrackShipment = () => {
                 : 'tracking-feedback-info'
             }`}
           >
+
             <div className="feedback-icon">
-              {scanResult.isNearDestination ? '✓' : 'i'}
+              {scanResult.isNearDestination
+                ? '✓'
+                : 'i'}
             </div>
 
             <div>
+
               <strong>
                 {scanResult.isNearDestination
                   ? 'Destination reached'
@@ -295,120 +367,209 @@ const TrackShipment = () => {
                   ? 'The QR code was scanned within the configured destination radius.'
                   : 'The package is still outside the destination radius.'}
               </p>
+
             </div>
+
           </div>
         )}
 
-        {/* Shipment overview */}
+
+        {/* =================================================
+            SHIPMENT OVERVIEW
+            ================================================= */}
+
         <section className="tracking-grid">
 
+          {/* Package details */}
           <Card>
             <CardBody>
+
               <div className="tracking-section-heading">
+
                 <div>
-                  <span className="eyebrow">SHIPMENT</span>
-                  <h2>Package details</h2>
+                  <span className="eyebrow">
+                    SHIPMENT
+                  </span>
+
+                  <h2>
+                    Package details
+                  </h2>
                 </div>
 
-                <div className="section-icon">□</div>
+                <div className="section-icon">
+                  □
+                </div>
+
               </div>
 
+
               <div className="tracking-details">
-                <div className="tracking-detail">
-                  <span>Waste type</span>
-                  <strong>{trashData.trashType}</strong>
-                </div>
 
                 <div className="tracking-detail">
-                  <span>Description</span>
+                  <span>
+                    Waste type
+                  </span>
+
                   <strong>
-                    {trashData.description || 'No description provided'}
+                    {trashData.trashType}
                   </strong>
                 </div>
 
+
                 <div className="tracking-detail">
-                  <span>Tracking ID</span>
+                  <span>
+                    Description
+                  </span>
+
+                  <strong>
+                    {trashData.description ||
+                      'No description provided'}
+                  </strong>
+                </div>
+
+
+                <div className="tracking-detail">
+                  <span>
+                    Tracking ID
+                  </span>
+
                   <strong className="tracking-mono">
                     {trackingId}
                   </strong>
                 </div>
 
+
                 <div className="tracking-detail">
-                  <span>Created</span>
+                  <span>
+                    Created
+                  </span>
+
                   <strong>
-                    {formatDate(trashData.createdAt)}
+                    {formatDate(
+                      trashData.createdAt
+                    )}
                   </strong>
                 </div>
+
               </div>
+
             </CardBody>
           </Card>
 
+
+          {/* Route */}
           <Card>
             <CardBody>
+
               <div className="tracking-section-heading">
+
                 <div>
-                  <span className="eyebrow">ROUTE</span>
-                  <h2>Shipment route</h2>
+                  <span className="eyebrow">
+                    ROUTE
+                  </span>
+
+                  <h2>
+                    Shipment route
+                  </h2>
                 </div>
 
-                <div className="section-icon">⌖</div>
+                <div className="section-icon">
+                  ⌖
+                </div>
+
               </div>
 
+
               <div className="route-card">
+
                 <div className="route-point">
+
                   <div className="route-dot route-dot-origin" />
 
                   <div>
-                    <span>Origin</span>
+
+                    <span>
+                      Origin
+                    </span>
 
                     <strong>
                       {formatCoordinates(
                         trashData.sourceLocation?.coordinates
                       )}
                     </strong>
+
                   </div>
+
                 </div>
+
 
                 <div className="route-line" />
 
+
                 <div className="route-point">
+
                   <div className="route-dot route-dot-destination" />
 
                   <div>
-                    <span>Destination</span>
+
+                    <span>
+                      Destination
+                    </span>
 
                     <strong>
-                      {trashData.destination?.name || 'Unknown destination'}
+                      {trashData.destination?.name ||
+                        'Unknown destination'}
                     </strong>
+
                   </div>
+
                 </div>
+
               </div>
+
             </CardBody>
           </Card>
 
         </section>
 
-        {/* Scan action */}
+
+        {/* =================================================
+            SCAN ACTION
+            ================================================= */}
+
         {trashData.status !== 'DELIVERED' && (
           <section className="tracking-action-card">
-            <div className="tracking-action-icon">⌖</div>
+
+            <div className="tracking-action-icon">
+              ⌖
+            </div>
+
 
             <div className="tracking-action-content">
-              <span className="eyebrow">COURIER ACTION</span>
 
-              <h2>Are you handling this package?</h2>
+              <span className="eyebrow">
+                COURIER ACTION
+              </span>
+
+              <h2>
+                Are you handling this package?
+              </h2>
 
               <p>
-                Record your current location to add a new point
-                to this shipment's tracking history.
+                Record your current location to add a
+                new point to this shipment's tracking
+                history.
               </p>
+
 
               {locationError && (
                 <div className="tracking-location-error">
                   {locationError}
                 </div>
               )}
+
             </div>
+
 
             <Button
               onClick={performScan}
@@ -419,147 +580,125 @@ const TrackShipment = () => {
                 ? 'Acquiring GPS...'
                 : 'Record location scan'}
             </Button>
+
           </section>
         )}
 
-        {/* Scan history */}
+
+        {/* =================================================
+            ACTIVITY TIMELINE
+            ================================================= */}
+
         <section className="tracking-history">
+
           <div className="tracking-section-heading">
+
             <div>
-              <span className="eyebrow">ACTIVITY</span>
-              <h2>Scan history</h2>
+              <span className="eyebrow">
+                ACTIVITY
+              </span>
+
+              <h2>
+                Shipment activity
+              </h2>
             </div>
 
             <span className="history-count">
-              {history.length} {history.length === 1 ? 'scan' : 'scans'}
+              {history.length}{' '}
+              {history.length === 1
+                ? 'scan'
+                : 'scans'}
             </span>
+
           </div>
+
 
           {history.length === 0 ? (
+
             <Card>
               <CardBody>
-                <div className="tracking-empty-history">
-                  <div className="tracking-empty-icon">⌖</div>
 
-                  <h3>No scans yet</h3>
+                <div className="tracking-empty-history">
+
+                  <div className="tracking-empty-icon">
+                    ⌖
+                  </div>
+
+                  <h3>
+                    No scans yet
+                  </h3>
 
                   <p>
-                    Once someone records a location scan,
-                    it will appear here.
+                    Once someone records a location
+                    scan, it will appear here.
                   </p>
+
                 </div>
+
               </CardBody>
             </Card>
+
           ) : (
-            <div className="timeline">
 
-              {history.map((scan, index) => (
-                <div className="timeline-item" key={scan._id || index}>
+            <Card>
+              <CardBody>
 
-                  <div className="timeline-marker">
-                    <div
-                      className={
-                        scan.isNearDestination
-                          ? 'timeline-dot timeline-dot-success'
-                          : 'timeline-dot'
-                      }
-                    />
-                  </div>
+                <ShipmentTimeline
+                  history={history}
+                  createdAt={trashData.createdAt}
+                />
 
-                  <div className="timeline-card">
-                    <div className="timeline-card-header">
-                      <div>
-                        <h3>{getScanTitle(scan)}</h3>
+              </CardBody>
+            </Card>
 
-                        <span>
-                          {formatDate(scan.scannedAt)}
-                        </span>
-                      </div>
-
-                      <Badge
-                        status={
-                          scan.isNearDestination
-                            ? 'DELIVERED'
-                            : 'IN_TRANSIT'
-                        }
-                      >
-                        {scan.isNearDestination
-                          ? 'Destination'
-                          : 'Transit'}
-                      </Badge>
-                    </div>
-
-                    <div className="timeline-meta">
-
-                      <div>
-                        <span>Distance</span>
-                        <strong>
-                          {formatDistance(
-                            scan.distanceFromDestination
-                          )}
-                        </strong>
-                      </div>
-
-                      <div>
-                        <span>Coordinates</span>
-                        <strong className="tracking-mono">
-                          {formatCoordinates(
-                            scan.location?.coordinates
-                          )}
-                        </strong>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {/* Shipment creation */}
-              <div className="timeline-item timeline-origin">
-
-                <div className="timeline-marker">
-                  <div className="timeline-dot timeline-dot-origin" />
-                </div>
-
-                <div className="timeline-card timeline-origin-card">
-                  <h3>Shipment created</h3>
-
-                  <span>
-                    {formatDate(trashData.createdAt)}
-                  </span>
-
-                  <p>
-                    Package registered and tracking ID generated.
-                  </p>
-                </div>
-
-              </div>
-
-            </div>
           )}
+
         </section>
 
-        {/* Important limitation */}
+
+        {/* =================================================
+            IMPORTANT LIMITATION
+            ================================================= */}
+
         <section className="tracking-notice">
-          <div className="tracking-notice-icon">!</div>
+
+          <div className="tracking-notice-icon">
+            !
+          </div>
 
           <div>
-            <strong>What this tracking means</strong>
+
+            <strong>
+              What this tracking means
+            </strong>
 
             <p>
-              TrashTrace records where the package QR code was
-              scanned. It does not continuously track the physical
-              package. A scan near the destination is therefore
-              evidence of a nearby scan, not guaranteed physical
-              delivery.
+              TrashTrace records where the package QR
+              code was scanned. It does not continuously
+              track the physical package. A scan near the
+              destination is therefore evidence of a nearby
+              scan, not guaranteed physical delivery.
             </p>
+
           </div>
+
         </section>
 
-        {/* Footer navigation */}
+
+        {/* =================================================
+            FOOTER NAVIGATION
+            ================================================= */}
+
         <div className="tracking-footer">
-          <Link to="/">← Back to home</Link>
-          <Link to="/create">Create another shipment →</Link>
+
+          <Link to="/">
+            ← Back to home
+          </Link>
+
+          <Link to="/create">
+            Create another shipment →
+          </Link>
+
         </div>
 
       </div>
