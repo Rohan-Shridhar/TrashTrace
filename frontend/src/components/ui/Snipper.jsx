@@ -1,16 +1,19 @@
 import React from 'react';
 
-const Spinner = ({ size = 'md', label = '' }) => {
+const Spinner = ({
+  size = 'md',
+  label = 'Loading',
+}) => {
   return (
-    <div className={`spinner-wrapper spinner-${size}`}>
-      <span className="spinner" aria-hidden="true" />
-
-      {label && (
-        <span className="spinner-label">
-          {label}
-        </span>
-      )}
-    </div>
+    <span
+      className={`spinner spinner--${size}`}
+      role="status"
+      aria-label={label}
+      aria-live="polite"
+    >
+      <span className="spinner__circle" aria-hidden="true" />
+      <span className="sr-only">{label}</span>
+    </span>
   );
 };
 

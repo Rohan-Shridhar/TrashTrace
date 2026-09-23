@@ -11,22 +11,27 @@ const Button = ({
   fullWidth = false,
   className = '',
   onClick,
+  ...props
 }) => {
+  const classes = [
+    'btn',
+    `btn--${variant}`,
+    `btn--${size}`,
+    fullWidth ? 'btn--full' : '',
+    loading ? 'btn--loading' : '',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <button
       type={type}
+      className={classes}
       disabled={disabled || loading}
+      aria-busy={loading}
       onClick={onClick}
-      className={[
-        'btn',
-        `btn-${variant}`,
-        `btn-${size}`,
-        fullWidth ? 'btn-full' : '',
-        loading ? 'btn-loading' : '',
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      {...props}
     >
       {loading ? (
         <>
