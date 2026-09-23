@@ -1819,3 +1819,45 @@ button {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Accessible spinner */
+.spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.spinner__circle {
+  display: block;
+  width: 18px;
+  height: 18px;
+
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+
+  animation: spinner-rotate 0.7s linear infinite;
+}
+
+.spinner--sm .spinner__circle {
+  width: 15px;
+  height: 15px;
+}
+
+.spinner--lg .spinner__circle {
+  width: 28px;
+  height: 28px;
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner__circle {
+    animation: none;
+  }
+}
