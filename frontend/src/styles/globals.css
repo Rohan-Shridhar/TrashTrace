@@ -1642,3 +1642,42 @@ textarea:focus {
     scroll-behavior: auto !important;
   }
 }
+
+.spinner-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.spinner {
+  display: block;
+
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--primary-color);
+
+  border-radius: 50%;
+
+  animation: loader-spin 700ms linear infinite;
+}
+
+.spinner-sm .spinner {
+  width: 16px;
+  height: 16px;
+}
+
+.spinner-md .spinner {
+  width: 22px;
+  height: 22px;
+}
+
+.spinner-lg .spinner {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+.spinner-label {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
