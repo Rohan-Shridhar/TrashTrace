@@ -10,7 +10,7 @@ const CreateShipment = lazy(
 const TrackShipment = lazy(
   () => import("../pages/TrackShipment/TrackShipment")
 );
-const ScanQR = lazy(() => import("../pages/ScanQR/ScanQR"));
+const ScanQR = lazy(() => import('../pages/ScanQR/ScanQR'));
 const Dashboard = lazy(
   () => import("../pages/Dashboard/Dashboard")
 );
