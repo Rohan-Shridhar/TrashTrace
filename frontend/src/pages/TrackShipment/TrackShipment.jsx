@@ -183,23 +183,43 @@ const TrackShipment = () => {
       <div className="tracking-container">
 
         {/* Header */}
-        <section className="tracking-header">
-          <div>
-            <span className="eyebrow">PACKAGE TRACKING</span>
+{/* Header */}
+    <section className="tracking-header">
+      <div>
+        <span className="eyebrow">PACKAGE TRACKING</span>
 
-            <h1>
-              Shipment <span>#{trackingId}</span>
-            </h1>
+        <h1>
+          Shipment <span>#{trackingId}</span>
+        </h1>
 
-            <p>
-              Follow the recorded scan history for this waste package.
-            </p>
-          </div>
+        <p>
+          Follow the recorded scan history for this waste package.
+        </p>
+      </div>
 
-          <Badge status={trashData.status}>
-            {statusLabel}
-          </Badge>
-        </section>
+      <Badge status={trashData.status}>
+        {statusLabel}
+      </Badge>
+    </section>
+
+    {/* Shipment progress */}
+    <section className="tracking-progress-card">
+      <div className="tracking-progress-header">
+        <div>
+          <span className="eyebrow">SHIPMENT JOURNEY</span>
+
+          <h2>Tracking progress</h2>
+        </div>
+
+        <span className="tracking-progress-status">
+          {statusLabel}
+        </span>
+      </div>
+
+      <ShipmentProgress
+        status={trashData.status}
+      />
+    </section>
 
         {/* Status hero */}
         <section
