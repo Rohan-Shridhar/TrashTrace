@@ -1,0 +1,151 @@
+@import "./variables.css";
+@import "./typography.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--color-background);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+}
+
+::selection {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+/* ========================================
+   SCROLLBAR
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ========================================
+   FOCUS
+   ======================================== */
+
+:focus-visible {
+  outline: 3px solid rgba(31, 122, 90, 0.25);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   ROOT
+   ======================================== */
+
+#root {
+  min-height: 100vh;
+}
+
+/* ========================================
+   PAGE
+   ======================================== */
+
+.page {
+  min-height: calc(100vh - var(--navbar-height));
+}
+
+.page-container {
+  width: min(
+    calc(100% - 2rem),
+    var(--container-xl)
+  );
+
+  margin-inline: auto;
+}
+
+.page-section {
+  padding-block: var(--space-16);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .page-container {
+    width: min(
+      calc(100% - 1.5rem),
+      var(--container-xl)
+    );
+  }
+
+  .page-section {
+    padding-block: var(--space-12);
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    width: min(
+      calc(100% - 1rem),
+      var(--container-xl)
+    );
+  }
+
+  .page-section {
+    padding-block: var(--space-10);
+  }
+}
