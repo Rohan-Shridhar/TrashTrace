@@ -1,53 +1,17 @@
-const statusConfig = {
-  CREATED: {
-    label: "Created",
-    variant: "neutral",
-  },
+import React from 'react';
 
-  IN_TRANSIT: {
-    label: "In transit",
-    variant: "info",
-  },
+const Spinner = ({ size = 'md', label = '' }) => {
+  return (
+    <div className={`spinner-wrapper spinner-${size}`}>
+      <span className="spinner" aria-hidden="true" />
 
-  DELIVERED: {
-    label: "Delivered",
-    variant: "success",
-  },
-
-  ERROR: {
-    label: "Error",
-    variant: "danger",
-  },
-
-  TRANSIT_SCAN: {
-    label: "Transit scan",
-    variant: "info",
-  },
+      {label && (
+        <span className="spinner-label">
+          {label}
+        </span>
+      )}
+    </div>
+  );
 };
 
-function Badge({
-  children,
-  variant = "neutral",
-  status,
-}) {
-  const config = status
-    ? statusConfig[status]
-    : null;
-
-  const label =
-    config?.label ?? children;
-
-  const badgeVariant =
-    config?.variant ?? variant;
-
-  return (
-    <span
-      className={`badge badge-${badgeVariant}`}
-    >
-      <span className="badge-dot" />
-      {label}
-    </span>
-  );
-}
-
-export default Badge;
+export default Spinner;
