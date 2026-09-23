@@ -1,0 +1,170 @@
+/* ========================================
+   LAYOUT
+   ======================================== */
+
+.container {
+  width: min(
+    calc(100% - 2rem),
+    var(--container-xl)
+  );
+
+  margin-inline: auto;
+}
+
+.flex {
+  display: flex;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+.grid {
+  display: grid;
+}
+
+.hidden {
+  display: none;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+/* ========================================
+   GAP
+   ======================================== */
+
+.gap-1 {
+  gap: var(--space-1);
+}
+
+.gap-2 {
+  gap: var(--space-2);
+}
+
+.gap-3 {
+  gap: var(--space-3);
+}
+
+.gap-4 {
+  gap: var(--space-4);
+}
+
+.gap-6 {
+  gap: var(--space-6);
+}
+
+.gap-8 {
+  gap: var(--space-8);
+}
+
+/* ========================================
+   TEXT
+   ======================================== */
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ========================================
+   WIDTH
+   ======================================== */
+
+.w-full {
+  width: 100%;
+}
+
+.max-w-sm {
+  max-width: var(--container-sm);
+}
+
+.max-w-md {
+  max-width: var(--container-md);
+}
+
+.max-w-lg {
+  max-width: var(--container-lg);
+}
+
+.max-w-xl {
+  max-width: var(--container-xl);
+}
+
+/* ========================================
+   MARGIN
+   ======================================== */
+
+.mx-auto {
+  margin-inline: auto;
+}
+
+.mt-4 {
+  margin-top: var(--space-4);
+}
+
+.mt-6 {
+  margin-top: var(--space-6);
+}
+
+.mt-8 {
+  margin-top: var(--space-8);
+}
+
+.mb-4 {
+  margin-bottom: var(--space-4);
+}
+
+.mb-6 {
+  margin-bottom: var(--space-6);
+}
+
+.mb-8 {
+  margin-bottom: var(--space-8);
+}
+
+/* ========================================
+   VISIBILITY
+   ======================================== */
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
