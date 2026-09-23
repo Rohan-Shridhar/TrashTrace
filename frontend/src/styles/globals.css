@@ -1861,3 +1861,111 @@ button {
     animation: none;
   }
 }
+
+/* =========================================================
+   FORM CONSISTENCY
+   ========================================================= */
+
+input,
+select,
+textarea {
+  color: var(--color-text);
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-primary);
+}
+
+textarea {
+  resize: vertical;
+}
+
+select {
+  cursor: pointer;
+}
+
+
+/* Remove browser-specific number input arrows */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  margin: 0;
+}
+
+
+/* Make native controls fit the product */
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--color-primary);
+}
+
+/* =========================================================
+   CARD CONSISTENCY
+   ========================================================= */
+
+.card {
+  overflow: hidden;
+}
+
+.card img {
+  display: block;
+  max-width: 100%;
+}
+
+.card h1,
+.card h2,
+.card h3,
+.card h4 {
+  color: var(--color-text);
+}
+
+.card p:last-child {
+  margin-bottom: 0;
+}
+
+/* =========================================================
+   LINK CONSISTENCY
+   ========================================================= */
+
+a {
+  color: inherit;
+}
+
+a:not(.btn):not(.nav-link) {
+  text-underline-offset: 3px;
+}
+
+a:not(.btn):not(.nav-link):hover {
+  color: var(--color-primary);
+}
+
+/* =========================================================
+   PAGE LOADING
+   ========================================================= */
+
+.page-loading {
+  min-height: 60vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.page-loading p {
+  margin: 0;
+  font-size: 0.9rem;
+}
