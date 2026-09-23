@@ -79,6 +79,5 @@ const trashSchema = new mongoose.Schema({
 // Indexes for geospatial queries
 trashSchema.index({ 'sourceLocation': '2dsphere' });
 trashSchema.index({ 'destination.location': '2dsphere' });
-trashSchema.index({ 'latestScan.location': '2dsphere' });
 
 module.exports = mongoose.model('Trash', trashSchema);
