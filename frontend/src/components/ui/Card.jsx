@@ -19,6 +19,8 @@ function Card({
   );
 }
 
+export { Card };
+
 export function CardHeader({
   title,
   description,

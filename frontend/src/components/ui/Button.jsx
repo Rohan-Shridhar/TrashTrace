@@ -14,11 +14,11 @@ const Button = ({
   ...props
 }) => {
   const classes = [
-    'btn',
-    `btn--${variant}`,
-    `btn--${size}`,
-    fullWidth ? 'btn--full' : '',
-    loading ? 'btn--loading' : '',
+    'button',
+    `button-${variant}`,
+    `button-${size}`,
+    fullWidth ? 'button-full' : '',
+    loading ? 'button-loading' : '',
     className,
   ]
     .filter(Boolean)

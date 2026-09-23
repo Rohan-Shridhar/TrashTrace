@@ -140,7 +140,7 @@ const TrackShipment = () => {
   if (loading) {
     return (
       <div className="tracking-loading">
-        <Spinner size="large" />
+        <Spinner size="lg" />
         <p>Loading shipment details...</p>
       </div>
     );
