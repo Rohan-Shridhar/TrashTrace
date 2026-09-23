@@ -80,7 +80,7 @@ const ShipmentProgress = ({ status = 'CREATED' }) => {
         })}
       </div>
     </div>
-  );
+   );
 };
 
 export default ShipmentProgress;
