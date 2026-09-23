@@ -5,14 +5,11 @@ import QRCodeCard from '../../components/qr/QRCodeCard';
 import { getCurrentLocation } from '../../utils/geolocation';
 import { getOwnerToken } from '../../utils/owner';
 
-import {
-  Button,
-  Card,
-  CardBody,
-  Input,
-  Select,
-  Badge,
-} from '../../components/ui';
+import Button from '../../components/ui/Button';
+import Card, { CardBody } from '../../components/ui/Card';
+import Input from '../../components/ui/Input';
+import Select from '../../components/ui/Select';
+import Badge from '../../components/ui/Badge';
 
 import './create-shipment.css';
 
