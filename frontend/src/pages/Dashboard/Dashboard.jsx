@@ -146,8 +146,7 @@ const Dashboard = () => {
         )}
 
         {/* Stats */}
-        <section className="dashboard-stats">
-          <div className="stat-card stat-card-main">
+          <section className="dashboard-stats stagger-children">          <div className="stat-card stat-card-main">
             <div className="stat-icon">📦</div>
             <div>
               <span>Total shipments</span>
@@ -225,7 +224,7 @@ const Dashboard = () => {
                 }
               />
             ) : (
-              <div className="shipment-list">
+              <div className="shipment-list stagger-children">
                 {filteredPackages.map((pkg) => (
                   <article className="shipment-card" key={pkg._id || pkg.trackingId}>
 
