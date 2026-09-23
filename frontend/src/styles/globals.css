@@ -1301,3 +1301,344 @@ select {
     height: 32px;
   }
 }
+
+/* =========================================
+   GLOBAL MOTION & MICRO-INTERACTIONS
+========================================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* -----------------------------------------
+   PAGE ENTRANCE
+----------------------------------------- */
+
+.page-container,
+.dashboard-page,
+.track-page,
+.scan-page,
+.create-page {
+  animation: page-enter 420ms ease both;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* -----------------------------------------
+   FADE UP UTILITY
+----------------------------------------- */
+
+.fade-up {
+  animation: fade-up 450ms ease both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* -----------------------------------------
+   STAGGERED CHILDREN
+----------------------------------------- */
+
+.stagger-children > * {
+  animation: fade-up 450ms ease both;
+}
+
+.stagger-children > *:nth-child(1) {
+  animation-delay: 40ms;
+}
+
+.stagger-children > *:nth-child(2) {
+  animation-delay: 80ms;
+}
+
+.stagger-children > *:nth-child(3) {
+  animation-delay: 120ms;
+}
+
+.stagger-children > *:nth-child(4) {
+  animation-delay: 160ms;
+}
+
+.stagger-children > *:nth-child(5) {
+  animation-delay: 200ms;
+}
+
+.stagger-children > *:nth-child(6) {
+  animation-delay: 240ms;
+}
+
+/* -----------------------------------------
+   BUTTON FEEDBACK
+----------------------------------------- */
+
+button,
+.btn,
+a.btn {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:not(:disabled),
+.btn:not(:disabled) {
+  transition:
+    transform var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    color var(--transition-fast);
+}
+
+button:not(:disabled):active,
+.btn:not(:disabled):active {
+  transform: scale(0.975);
+}
+
+.btn:focus-visible,
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 3px;
+}
+
+/* -----------------------------------------
+   CARD INTERACTION
+----------------------------------------- */
+
+.card {
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.interactive-card {
+  cursor: pointer;
+}
+
+.interactive-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(34, 197, 94, 0.25);
+  box-shadow: var(--shadow-md);
+}
+
+/* -----------------------------------------
+   LINK INTERACTION
+----------------------------------------- */
+
+a {
+  transition:
+    color var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+a:not(.btn):hover {
+  opacity: 0.88;
+}
+
+/* -----------------------------------------
+   FORM INTERACTION
+----------------------------------------- */
+
+input,
+select,
+textarea {
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast);
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.08);
+}
+
+/* -----------------------------------------
+   LOADING
+----------------------------------------- */
+
+.loading-center {
+  min-height: 50vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 1rem;
+
+  color: var(--text-secondary);
+}
+
+.loader {
+  width: 30px;
+  height: 30px;
+
+  border: 3px solid rgba(255, 255, 255, 0.08);
+  border-top-color: var(--primary-color);
+
+  border-radius: 50%;
+
+  animation: loader-spin 750ms linear infinite;
+}
+
+@keyframes loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* -----------------------------------------
+   SUCCESS PULSE
+----------------------------------------- */
+
+.success-pulse {
+  animation: success-pulse 900ms ease both;
+}
+
+@keyframes success-pulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+
+  55% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* -----------------------------------------
+   STATUS DOT
+----------------------------------------- */
+
+.status-dot {
+  position: relative;
+
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: var(--primary-color);
+}
+
+.status-dot::after {
+  content: "";
+
+  position: absolute;
+  inset: -4px;
+
+  border-radius: 50%;
+
+  background: rgba(34, 197, 94, 0.15);
+
+  animation: status-pulse 1.8s ease-out infinite;
+}
+
+@keyframes status-pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.8;
+  }
+
+  70% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* -----------------------------------------
+   SUBTLE BACKGROUND GRID
+----------------------------------------- */
+
+.motion-grid {
+  position: relative;
+}
+
+.motion-grid::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  opacity: 0.3;
+
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    );
+
+  background-size: 40px 40px;
+
+  mask-image: linear-gradient(
+    to bottom,
+    black,
+    transparent 80%
+  );
+}
+
+/* -----------------------------------------
+   REDUCED MOTION
+----------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
