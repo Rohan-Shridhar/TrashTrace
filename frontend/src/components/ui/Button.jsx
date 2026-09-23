@@ -1,43 +1,43 @@
-function Button({
+import React from 'react';
+import Spinner from './Spinner';
+
+const Button = ({
   children,
-  variant = "primary",
-  size = "md",
-  type = "button",
+  variant = 'primary',
+  size = 'md',
+  type = 'button',
   disabled = false,
   loading = false,
   fullWidth = false,
-  className = "",
+  className = '',
   onClick,
-  ...props
-}) {
-  const classes = [
-    "button",
-    `button-${variant}`,
-    `button-${size}`,
-    fullWidth ? "button-full" : "",
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
-
+}) => {
   return (
     <button
       type={type}
-      className={classes}
       disabled={disabled || loading}
       onClick={onClick}
-      {...props}
+      className={[
+        'btn',
+        `btn-${variant}`,
+        `btn-${size}`,
+        fullWidth ? 'btn-full' : '',
+        loading ? 'btn-loading' : '',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       {loading ? (
         <>
-          <span className="button-spinner" />
-          <span>Loading...</span>
+          <Spinner size="sm" />
+          <span>Working…</span>
         </>
       ) : (
         children
       )}
     </button>
   );
-}
+};
 
 export default Button;
