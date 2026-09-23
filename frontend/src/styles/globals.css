@@ -1681,3 +1681,24 @@ textarea:focus {
   color: var(--text-secondary);
   font-size: 0.8rem;
 }
+
+.btn-loading {
+  cursor: wait;
+  opacity: 0.8;
+}
+
+.btn-loading .spinner-wrapper {
+  gap: 0;
+}
+
+.btn-loading .spinner {
+  width: 15px;
+  height: 15px;
+}
+
+.btn-loading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+}
