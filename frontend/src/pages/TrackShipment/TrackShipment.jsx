@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getCurrentLocation } from '../../utils/geolocation';
 
+import ShipmentProgress from '../../components/shipment/ShipmentProgress';
 import Card, { CardBody } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
