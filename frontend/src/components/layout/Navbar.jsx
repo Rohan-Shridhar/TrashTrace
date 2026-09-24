@@ -22,7 +22,7 @@ const Navbar = () => {
           onClick={closeMobile}
         >
           <span className="navbar-logo">
-            T
+            <img src="/trashtrace.png" alt="TrashTrace Logo" />
           </span>
 
           <span className="navbar-brand-text">
