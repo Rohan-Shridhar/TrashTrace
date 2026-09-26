@@ -478,6 +478,14 @@
   font-size: 0.65rem;
 }
 
+.notifications-error {
+  margin: 0;
+  padding: 1.25rem;
+  color: var(--color-danger);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
 .notifications-empty {
   padding: 2.5rem 1.5rem;
   display: flex;

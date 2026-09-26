@@ -6,13 +6,29 @@ import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
+import { requestJson } from '../../utils/api';
 import { getOwnerToken } from '../../utils/owner';
 
 import './dashboard.css';
 
+const getText = (value, fallback = '—') =>
+  typeof value === 'string' || typeof value === 'number' ? value : fallback;
+
+const getDestinationLabel = (destination) => {
+  if (typeof destination === 'string') return destination;
+  if (destination && typeof destination === 'object') {
+    return getText(destination.name);
+  }
+  return '—';
+};
+
+const getRequestError = (reason, fallback) =>
+  reason instanceof Error && reason.message ? reason.message : fallback;
+
 const Dashboard = () => {
   const [packages, setPackages] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [notificationsError, setNotificationsError] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('ALL');
@@ -22,31 +38,39 @@ const Dashboard = () => {
   const fetchData = async () => {
     setLoading(true);
     setError('');
+    setNotificationsError('');
 
-    try {
-      const [packagesResponse, notificationsResponse] = await Promise.all([
-        fetch(`/api/trash/owner/${ownerToken}`),
-        fetch(`/api/notifications/${ownerToken}`),
-      ]);
+    const [packageResult, notificationResult] = await Promise.allSettled([
+      requestJson(`/api/trash/owner/${ownerToken}`),
+      requestJson(`/api/notifications/${ownerToken}`),
+    ]);
 
-      if (!packagesResponse.ok) {
-        throw new Error('Failed to load your packages.');
-      }
-
-      const packageData = await packagesResponse.json();
-      const notificationData = notificationsResponse.ok
-        ? await notificationsResponse.json()
-        : [];
-
-      setPackages(Array.isArray(packageData) ? packageData : []);
-      setNotifications(
-        Array.isArray(notificationData) ? notificationData : []
+    if (packageResult.status === 'fulfilled' && Array.isArray(packageResult.value)) {
+      setPackages(packageResult.value);
+    } else {
+      setPackages([]);
+      setError(
+        packageResult.status === 'rejected'
+          ? getRequestError(packageResult.reason, 'Unable to load packages.')
+          : 'The server returned an invalid packages response.'
       );
-    } catch (err) {
-      setError(err.message || 'Something went wrong while loading the dashboard.');
-    } finally {
-      setLoading(false);
     }
+
+    if (notificationResult.status === 'rejected') {
+      setNotifications([]);
+      setNotificationsError(
+        notificationResult.reason instanceof Error
+          ? notificationResult.reason.message
+          : 'Unable to load notifications.'
+      );
+    } else if (!Array.isArray(notificationResult.value)) {
+      setNotifications([]);
+      setNotificationsError('The server returned an invalid notifications response.');
+    } else {
+      setNotifications(notificationResult.value);
+    }
+
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -55,15 +79,11 @@ const Dashboard = () => {
 
   const markAllRead = async () => {
     try {
-      const response = await fetch(
-        `/api/notifications/${ownerToken}/read`,
-        { method: 'PUT' }
-      );
+      await requestJson(`/api/notifications/${ownerToken}/read`, {
+        method: 'PUT',
+      });
 
-      if (!response.ok) {
-        throw new Error('Failed to update notifications.');
-      }
-
+      setNotificationsError('');
       setNotifications((current) =>
         current.map((notification) => ({
           ...notification,
@@ -71,7 +91,9 @@ const Dashboard = () => {
         }))
       );
     } catch (err) {
-      setError(err.message);
+      setNotificationsError(
+        err instanceof Error ? err.message : 'Unable to update notifications.'
+      );
     }
   };
 
@@ -146,32 +168,35 @@ const Dashboard = () => {
         )}
 
         {/* Stats */}
-          <section className="dashboard-stats stagger-children">          <div className="stat-card stat-card-main">
-            <div className="stat-icon">📦</div>
-            <div>
-              <span>Total shipments</span>
-              <strong>{stats.total}</strong>
+        {!error && (
+          <section className="dashboard-stats stagger-children">
+            <div className="stat-card stat-card-main">
+              <div className="stat-icon">📦</div>
+              <div>
+                <span>Total shipments</span>
+                <strong>{stats.total}</strong>
+              </div>
             </div>
-          </div>
 
-          <div className="stat-card">
-            <span>Created</span>
-            <strong>{stats.created}</strong>
-            <small>Awaiting first scan</small>
-          </div>
+            <div className="stat-card">
+              <span>Created</span>
+              <strong>{stats.created}</strong>
+              <small>Awaiting first scan</small>
+            </div>
 
-          <div className="stat-card">
-            <span>In transit</span>
-            <strong>{stats.transit}</strong>
-            <small>Latest scan away from destination</small>
-          </div>
+            <div className="stat-card">
+              <span>In transit</span>
+              <strong>{stats.transit}</strong>
+              <small>Latest scan away from destination</small>
+            </div>
 
-          <div className="stat-card stat-card-delivered">
-            <span>Delivered</span>
-            <strong>{stats.delivered}</strong>
-            <small>Verified near destination</small>
-          </div>
-        </section>
+            <div className="stat-card stat-card-delivered">
+              <span>Delivered</span>
+              <strong>{stats.delivered}</strong>
+              <small>Verified near destination</small>
+            </div>
+          </section>
+        )}
 
         <div className="dashboard-grid">
 
@@ -185,7 +210,7 @@ const Dashboard = () => {
               </div>
 
               <div className="package-count">
-                {filteredPackages.length}
+                {error ? '—' : filteredPackages.length}
               </div>
             </div>
 
@@ -207,7 +232,7 @@ const Dashboard = () => {
               ))}
             </div>
 
-            {filteredPackages.length === 0 ? (
+            {error ? null : filteredPackages.length === 0 ? (
               <EmptyState
                 title={packages.length === 0 ? 'No shipments yet' : 'No matching shipments'}
                 description={
@@ -246,7 +271,7 @@ const Dashboard = () => {
 
                       <div className="shipment-detail shipment-destination">
                         <span>Destination</span>
-                        <strong>{pkg.destination || '—'}</strong>
+                        <strong>{getDestinationLabel(pkg.destination)}</strong>
                       </div>
 
                       <div className="shipment-detail">
@@ -307,7 +332,11 @@ const Dashboard = () => {
                 )}
               </div>
 
-              {notifications.length === 0 ? (
+              {notificationsError ? (
+                <p className="notifications-error" role="alert">
+                  {notificationsError}
+                </p>
+              ) : notifications.length === 0 ? (
                 <div className="notifications-empty">
                   <div>🔔</div>
                   <strong>No notifications</strong>
@@ -327,7 +356,7 @@ const Dashboard = () => {
                       <div className="notification-dot" />
 
                       <div className="notification-content">
-                        <p>{notification.message}</p>
+                        <p>{getText(notification.message, 'Notification message unavailable.')}</p>
 
                         <span>
                           {notification.createdAt

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import QRCodeCard from '../../components/qr/QRCodeCard';
 
 import { getCurrentLocation } from '../../utils/geolocation';
+import { requestJson } from '../../utils/api';
 import { getOwnerToken } from '../../utils/owner';
 
 import Button from '../../components/ui/Button';
@@ -87,7 +88,7 @@ const CreateShipment = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/trash', {
+      const data = await requestJson('/api/trash', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,12 +101,8 @@ const CreateShipment = () => {
         }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.error || 'Failed to create the shipment.'
-        );
+      if (!data || typeof data !== 'object' || Array.isArray(data)) {
+        throw new Error('The server returned an invalid shipment response.');
       }
 
       setCreatedData(data);

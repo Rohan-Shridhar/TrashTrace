@@ -556,7 +556,14 @@
   font-size: 0.82rem;
 }
 
-/* Empty */
+/* Empty and error states */
+
+.tracking-history-error {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
 
 .tracking-empty-history {
   padding: 28px 10px;

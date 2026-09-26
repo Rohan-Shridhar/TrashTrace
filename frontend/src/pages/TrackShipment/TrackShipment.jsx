@@ -9,6 +9,7 @@ import Card, { CardBody } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Badge from '../../components/ui/Badge';
 import Spinner from '../../components/ui/Spinner';
+import { requestJson } from '../../utils/api';
 
 import './track-shipment.css';
 
@@ -44,6 +45,7 @@ const TrackShipment = () => {
 
   const [trashData, setTrashData] = useState(null);
   const [history, setHistory] = useState([]);
+  const [historyError, setHistoryError] = useState('');
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -55,27 +57,38 @@ const TrackShipment = () => {
   const fetchData = async () => {
     setLoading(true);
     setError('');
+    setHistoryError('');
 
     try {
-      const [trashResponse, historyResponse] = await Promise.all([
-        fetch(`/api/trash/${trackingId}`),
-        fetch(`/api/trash/${trackingId}/history`),
+      const [shipmentResult, historyResult] = await Promise.allSettled([
+        requestJson(`/api/trash/${trackingId}`),
+        requestJson(`/api/trash/${trackingId}/history`),
       ]);
 
-      if (!trashResponse.ok) {
-        throw new Error(
-          'Tracking ID not found. Please check the QR code and try again.'
-        );
+      if (shipmentResult.status === 'rejected') {
+        throw shipmentResult.reason;
       }
 
-      const trash = await trashResponse.json();
-
-      const scans = historyResponse.ok
-        ? await historyResponse.json()
-        : [];
+      const trash = shipmentResult.value;
+      if (!trash || typeof trash !== 'object' || Array.isArray(trash)) {
+        throw new Error('The server returned an invalid shipment response.');
+      }
 
       setTrashData(trash);
-      setHistory(Array.isArray(scans) ? scans : []);
+
+      if (historyResult.status === 'rejected') {
+        setHistory([]);
+        setHistoryError(
+          historyResult.reason instanceof Error
+            ? historyResult.reason.message
+            : 'Unable to load scan history.'
+        );
+      } else if (!Array.isArray(historyResult.value)) {
+        setHistory([]);
+        setHistoryError('The server returned an invalid scan history response.');
+      } else {
+        setHistory(historyResult.value);
+      }
     } catch (err) {
       setError(
         err.message || 'Unable to load tracking information.'
@@ -99,7 +112,7 @@ const TrackShipment = () => {
     try {
       const coordinates = await getCurrentLocation();
 
-      const response = await fetch(
+      const data = await requestJson(
         `/api/trash/${trackingId}/scan`,
         {
           method: 'POST',
@@ -112,14 +125,6 @@ const TrackShipment = () => {
           }),
         }
       );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.error || 'Failed to record the location scan.'
-        );
-      }
 
       setScanResult(data);
 
@@ -613,7 +618,17 @@ const TrackShipment = () => {
           </div>
 
 
-          {history.length === 0 ? (
+          {historyError ? (
+
+            <Card>
+              <CardBody>
+                <p className="tracking-history-error" role="alert">
+                  {historyError}
+                </p>
+              </CardBody>
+            </Card>
+
+          ) : history.length === 0 ? (
 
             <Card>
               <CardBody>
