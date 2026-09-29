@@ -38,21 +38,25 @@ const workflow = [
 
 const capabilities = [
   {
+    icon: "qrcode",
     title: "QR-based tracking",
     description:
       "Every shipment gets a unique tracking ID and scannable QR code.",
   },
   {
+    icon: "location-dot",
     title: "Location scans",
     description:
       "Record where a package's QR code was scanned during its journey.",
   },
   {
+    icon: "circle-check",
     title: "Delivery verification",
     description:
       "Compare scan location with the intended destination to determine delivery status.",
   },
   {
+    icon: "clock-rotate-left",
     title: "Shipment history",
     description:
       "Review previous scans and see how a shipment progressed over time.",
@@ -300,6 +304,10 @@ function Home() {
               >
                 <span className="capability-number">
                   0{index + 1}
+                </span>
+
+                <span className="capability-icon" aria-hidden="true">
+                  <i className={`fa-solid fa-${capability.icon}`} />
                 </span>
 
                 <h3>{capability.title}</h3>

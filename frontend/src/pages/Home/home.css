@@ -656,7 +656,7 @@
 .capability-card {
   position: relative;
 
-  min-height: 230px;
+  min-height: 250px;
 
   transition:
     transform var(--transition-normal),
@@ -675,7 +675,9 @@
 .capability-number {
   display: block;
 
-  margin-bottom: 4rem;
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
 
   color: var(--color-text-muted);
 
@@ -692,6 +694,32 @@
   color: var(--color-primary);
 
   transform: translateX(4px);
+}
+
+.capability-icon {
+  width: 68px;
+  height: 68px;
+
+  display: grid;
+  place-items: center;
+
+  margin-bottom: 1.5rem;
+
+  border-radius: var(--radius-lg);
+
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+
+  font-size: 2rem;
+
+  transition:
+    transform var(--transition-normal),
+    background-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+.capability-card:hover .capability-icon {
+  transform: translateY(-3px) scale(1.06);
 }
 
 .capability-card h3 {
