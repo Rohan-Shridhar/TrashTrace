@@ -39,7 +39,7 @@ const Navbar = () => {
               `navbar-link ${isActive ? 'active' : ''}`
             }
           >
-            <span className="navbar-link-icon">▦</span>
+            <i className="navbar-link-icon fa-solid fa-table-cells-large" aria-hidden="true" />
             Dashboard
           </NavLink>
 
@@ -49,7 +49,7 @@ const Navbar = () => {
               `navbar-link ${isActive ? 'active' : ''}`
             }
           >
-            <span className="navbar-link-icon">⌁</span>
+            <i className="navbar-link-icon fa-solid fa-qrcode" aria-hidden="true" />
             Scan
           </NavLink>
 
@@ -100,7 +100,7 @@ const Navbar = () => {
           }
           onClick={closeMobile}
         >
-          <span>▦</span>
+          <span><i className="fa-solid fa-table-cells-large" aria-hidden="true" /></span>
           <div>
             <strong>Dashboard</strong>
             <small>View your shipments</small>
@@ -114,7 +114,7 @@ const Navbar = () => {
           }
           onClick={closeMobile}
         >
-          <span>⌁</span>
+          <span><i className="fa-solid fa-qrcode" aria-hidden="true" /></span>
           <div>
             <strong>Scan package</strong>
             <small>Track a QR-coded package</small>
