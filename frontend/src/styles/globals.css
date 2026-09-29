@@ -87,7 +87,7 @@ select {
    ======================================== */
 
 :focus-visible {
-  outline: 3px solid rgba(31, 122, 90, 0.25);
+  outline: 3px solid rgba(29, 102, 80, 0.32);
   outline-offset: 2px;
 }
 
@@ -1968,4 +1968,209 @@ a:not(.btn):not(.nav-link):hover {
 .page-loading p {
   margin: 0;
   font-size: 0.9rem;
+}
+
+/* =========================================
+   TRASHTRACE NAVBAR THEME
+========================================= */
+
+.navbar.navbar {
+  height: var(--navbar-height);
+
+  border-bottom: 1px solid rgba(190, 220, 202, 0.18);
+
+  background: rgba(20, 43, 34, 0.96);
+  box-shadow: 0 8px 26px rgba(15, 35, 27, 0.12);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.navbar .navbar-inner {
+  width: min(var(--container-xl), calc(100% - 2rem));
+  gap: 2rem;
+}
+
+.navbar .navbar-brand {
+  color: #f3f6f1;
+  transition: transform var(--transition-fast);
+}
+
+.navbar .navbar-brand:hover {
+  transform: translateY(-1px);
+}
+
+.navbar .navbar-logo {
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+
+  border: 1px solid rgba(207, 235, 216, 0.3);
+  border-radius: 12px;
+
+  background: rgba(211, 238, 220, 0.12);
+  box-shadow: 0 6px 18px rgba(8, 23, 16, 0.2);
+}
+
+.navbar .navbar-logo img {
+  width: 100%;
+  height: 100%;
+  padding: 4px;
+  object-fit: contain;
+}
+
+.navbar .navbar-brand:hover .navbar-logo {
+  box-shadow: 0 8px 24px rgba(119, 174, 145, 0.24);
+}
+
+.navbar .navbar-brand-text {
+  color: #f3f6f1;
+  font-size: 1.1rem;
+  letter-spacing: 0;
+}
+
+.navbar .navbar-brand-text span {
+  color: #b8ddc5;
+}
+
+.navbar .navbar-links {
+  height: auto;
+  gap: 0.35rem;
+  padding: 0.3rem;
+
+  border: 1px solid rgba(198, 224, 206, 0.16);
+  border-radius: 999px;
+
+  background: rgba(235, 246, 237, 0.055);
+}
+
+.navbar .navbar-link {
+  min-height: 42px;
+  padding: 0 1rem;
+
+  border-radius: 999px;
+
+  color: rgba(235, 243, 236, 0.76);
+  font-size: 0.82rem;
+}
+
+.navbar .navbar-link:hover {
+  color: #ffffff;
+  background: rgba(222, 240, 226, 0.1);
+}
+
+.navbar .navbar-link.active {
+  color: #e4f4e9;
+  background: rgba(177, 218, 190, 0.16);
+}
+
+.navbar .navbar-link.active::after {
+  display: none;
+}
+
+.navbar .navbar-link-icon,
+.navbar .navbar-link.active .navbar-link-icon {
+  color: #b8ddc5;
+  font-size: 0.9rem;
+}
+
+.navbar .navbar-context {
+  border-color: rgba(198, 224, 206, 0.22);
+  color: rgba(235, 243, 236, 0.64);
+}
+
+.navbar .navbar-cta {
+  padding: 0.68rem 1.05rem;
+
+  border: 1px solid rgba(209, 235, 216, 0.48);
+  border-radius: 12px;
+
+  background: #c8e8d2;
+  color: #173d30;
+
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.navbar .navbar-cta span {
+  width: 1.2rem;
+  height: 1.2rem;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+  background: rgba(23, 61, 48, 0.1);
+}
+
+.navbar .navbar-cta:hover {
+  border-color: #e1f0e4;
+  background: #e1f0e4;
+  box-shadow: 0 6px 18px rgba(7, 19, 13, 0.18);
+  transform: translateY(-2px);
+}
+
+.navbar .navbar-menu-button {
+  border-color: rgba(198, 224, 206, 0.24);
+  background: rgba(235, 246, 237, 0.08);
+}
+
+.navbar .navbar-menu-button span {
+  background: #e4f0e7;
+}
+
+@media (max-width: 760px) {
+  .navbar .navbar-inner {
+    width: calc(100% - 1.2rem);
+  }
+
+  .navbar .navbar-links,
+  .navbar .navbar-cta {
+    display: none;
+  }
+
+  .navbar .navbar-menu-button {
+    display: flex;
+  }
+
+  .navbar .navbar-mobile {
+    border-bottom: 1px solid rgba(198, 224, 206, 0.2);
+    background: rgba(20, 43, 34, 0.985);
+  }
+
+  .navbar .navbar-mobile-link {
+    color: rgba(235, 243, 236, 0.78);
+  }
+
+  .navbar .navbar-mobile-link:hover,
+  .navbar .navbar-mobile-link.active {
+    background: rgba(185, 222, 196, 0.12);
+    color: #f3f6f1;
+  }
+
+  .navbar .navbar-mobile-link > span {
+    background: rgba(235, 246, 237, 0.08);
+    color: #b8ddc5;
+  }
+
+  .navbar .navbar-mobile-link.active > span {
+    background: rgba(185, 222, 196, 0.16);
+    color: #d9efdf;
+  }
+
+  .navbar .navbar-mobile-link small {
+    color: rgba(235, 243, 236, 0.56);
+  }
+
+  .navbar .navbar-mobile-create {
+    border-color: rgba(184, 221, 197, 0.24);
+    background: rgba(184, 221, 197, 0.08);
+  }
+
+  .navbar .navbar-mobile-create > span {
+    background: #c8e8d2;
+    color: #173d30;
+  }
 }

@@ -3,52 +3,52 @@
      BRAND
      ======================================== */
 
-  --color-primary: #1f7a5a;
-  --color-primary-hover: #176044;
-  --color-primary-soft: #e8f5ef;
+   --color-primary: #1d6650;
+   --color-primary-hover: #154f3f;
+   --color-primary-soft: #e3f2e9;
 
-  --color-accent: #d9a441;
-  --color-accent-soft: #fbf3df;
+   --color-accent: #91628a;
+   --color-accent-soft: #f1e8f0;
 
   /* ========================================
      SEMANTIC COLORS
      ======================================== */
 
-  --color-success: #2f855a;
-  --color-success-soft: #e8f5ee;
+   --color-success: #287353;
+   --color-success-soft: #e6f2e9;
 
-  --color-warning: #b7791f;
-  --color-warning-soft: #fff7e6;
+   --color-warning: #795b70;
+   --color-warning-soft: #f1eaf0;
 
-  --color-danger: #c53030;
-  --color-danger-soft: #fff0f0;
+   --color-danger: #6d4a60;
+   --color-danger-soft: #efe8ed;
 
-  --color-info: #2b6cb0;
-  --color-info-soft: #ebf4ff;
+   --color-info: #356b59;
+   --color-info-soft: #e7f1eb;
 
   /* ========================================
      BACKGROUNDS
      ======================================== */
 
-  --color-background: #f7f8f6;
+   --color-background: #f7f8f5;
   --color-surface: #ffffff;
-  --color-surface-muted: #f1f3f0;
+   --color-surface-muted: #eef2ee;
 
   /* ========================================
      TEXT
      ======================================== */
 
-  --color-text-primary: #17211c;
-  --color-text-secondary: #5d6962;
-  --color-text-muted: #8a948e;
+   --color-text-primary: #182720;
+   --color-text-secondary: #53615a;
+   --color-text-muted: #79857d;
   --color-text-inverse: #ffffff;
 
   /* ========================================
      BORDERS
      ======================================== */
 
-  --color-border: #dfe5e1;
-  --color-border-strong: #cbd5cf;
+   --color-border: #d9e3dc;
+   --color-border-strong: #beccc2;
 
   /* ========================================
      SPACING
@@ -103,7 +103,7 @@
   --container-xl: 1200px;
   --container-2xl: 1400px;
 
-  --navbar-height: 72px;
+   --navbar-height: 76px;
 
   /* ========================================
      TRANSITIONS
@@ -121,4 +121,14 @@
   --z-sticky: 200;
   --z-modal: 500;
   --z-toast: 1000;
+
+   /* Legacy theme aliases */
+   --primary-color: var(--color-primary);
+   --bg-primary: var(--color-background);
+   --bg-secondary: var(--color-surface);
+   --text-primary: var(--color-text-primary);
+   --text-secondary: var(--color-text-secondary);
+   --text-muted: var(--color-text-muted);
+   --border-color: var(--color-border);
+   --z-navbar: var(--z-sticky);
 }
