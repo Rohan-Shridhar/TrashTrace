@@ -637,6 +637,10 @@
    CAPABILITIES
    ======================================== */
 
+.section-heading section-heading-centered{
+  text-align: center;
+}
+
 .home-capabilities {
   padding: 7rem 0;
 
