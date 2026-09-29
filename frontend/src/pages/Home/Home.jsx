@@ -8,24 +8,28 @@ import "./home.css";
 const workflow = [
   {
     number: "01",
+    icon: "qrcode",
     title: "Create a shipment",
     description:
       "Register a waste package with its type, starting location, and intended destination.",
   },
   {
     number: "02",
+    icon: "paperclip",
     title: "Attach the QR code",
     description:
       "Generate a unique QR code and attach it to the physical package.",
   },
   {
     number: "03",
+    icon: "location-dot",
     title: "Scan along the way",
     description:
       "Each scan records the location where the QR code was scanned.",
   },
   {
     number: "04",
+    icon: "circle-check",
     title: "Verify the destination",
     description:
       "A scan within the configured destination radius marks the shipment as delivered.",
@@ -250,6 +254,10 @@ function Home() {
                 <span className="workflow-number">
                   {step.number}
                 </span>
+                <i
+                  className={`workflow-icon fa-solid fa-${step.icon}`}
+                  aria-hidden="true"
+                />
 
                 <div>
                   <h3>{step.title}</h3>
