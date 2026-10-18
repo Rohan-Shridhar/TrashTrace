@@ -1,54 +1,64 @@
 :root {
   /* ========================================
-     BRAND
+     BRAND (b-egg inspired palette)
      ======================================== */
 
-   --color-primary: #1d6650;
-   --color-primary-hover: #154f3f;
-   --color-primary-soft: #e3f2e9;
+  --color-primary: #f4b30c;
+  --color-primary-hover: #e09f06;
+  --color-primary-active: #c58a00;
+  --color-primary-soft: rgba(244, 179, 12, 0.14);
+  --color-primary-subtle: #fef9ea;
 
-   --color-accent: #91628a;
-   --color-accent-soft: #f1e8f0;
+  /* Deep espresso contrast */
+  --color-espresso: #191200;
+  --color-espresso-hover: #291e03;
+  --color-espresso-soft: rgba(25, 18, 0, 0.05);
+
+  --color-accent: #1f4a38;
+  --color-accent-soft: #e7f1eb;
 
   /* ========================================
      SEMANTIC COLORS
      ======================================== */
 
-   --color-success: #287353;
-   --color-success-soft: #e6f2e9;
+  --color-success: #1f7a55;
+  --color-success-soft: #eaf6f0;
 
-   --color-warning: #795b70;
-   --color-warning-soft: #f1eaf0;
+  --color-warning: #c28800;
+  --color-warning-soft: #fdf5df;
 
-   --color-danger: #6d4a60;
-   --color-danger-soft: #efe8ed;
+  --color-danger: #c93b3b;
+  --color-danger-soft: #faeaea;
 
-   --color-info: #356b59;
-   --color-info-soft: #e7f1eb;
+  --color-info: #195240;
+  --color-info-soft: #e7f3ee;
 
   /* ========================================
-     BACKGROUNDS
+     BACKGROUNDS (b-egg warm organic cream)
      ======================================== */
 
-   --color-background: #f7f8f5;
+  --color-background: #fbf9f1;
   --color-surface: #ffffff;
-   --color-surface-muted: #eef2ee;
+  --color-surface-muted: #f4f1e6;
+  --color-surface-warm: #ede8d7;
+  --color-surface-dark: #191200;
 
   /* ========================================
      TEXT
      ======================================== */
 
-   --color-text-primary: #182720;
-   --color-text-secondary: #53615a;
-   --color-text-muted: #79857d;
-  --color-text-inverse: #ffffff;
+  --color-text-primary: #191200;
+  --color-text-secondary: #5a5446;
+  --color-text-muted: #8b8577;
+  --color-text-inverse: #fbf9f1;
 
   /* ========================================
      BORDERS
      ======================================== */
 
-   --color-border: #d9e3dc;
-   --color-border-strong: #beccc2;
+  --color-border: #e8e4d5;
+  --color-border-strong: #d3cdbb;
+  --color-border-dark: #31260a;
 
   /* ========================================
      SPACING
@@ -68,30 +78,25 @@
   --space-24: 6rem;
 
   /* ========================================
-     RADIUS
+     RADIUS (Soft organic rounded corners)
      ======================================== */
 
-  --radius-sm: 0.375rem;
-  --radius-md: 0.625rem;
-  --radius-lg: 0.875rem;
-  --radius-xl: 1.25rem;
-  --radius-2xl: 1.5rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-2xl: 2.25rem;
   --radius-full: 9999px;
 
   /* ========================================
      SHADOWS
      ======================================== */
 
-  --shadow-xs: 0 1px 2px rgba(23, 33, 28, 0.04);
-
-  --shadow-sm:
-    0 2px 6px rgba(23, 33, 28, 0.05);
-
-  --shadow-md:
-    0 8px 24px rgba(23, 33, 28, 0.07);
-
-  --shadow-lg:
-    0 16px 40px rgba(23, 33, 28, 0.09);
+  --shadow-xs: 0 1px 3px rgba(25, 18, 0, 0.04);
+  --shadow-sm: 0 3px 10px rgba(25, 18, 0, 0.06);
+  --shadow-md: 0 10px 30px rgba(25, 18, 0, 0.08);
+  --shadow-lg: 0 20px 50px rgba(25, 18, 0, 0.1);
+  --shadow-pill: 0 8px 24px -4px rgba(25, 18, 0, 0.08);
 
   /* ========================================
      LAYOUT
@@ -100,18 +105,18 @@
   --container-sm: 640px;
   --container-md: 768px;
   --container-lg: 1024px;
-  --container-xl: 1200px;
-  --container-2xl: 1400px;
+  --container-xl: 1220px;
+  --container-2xl: 1380px;
 
-   --navbar-height: 76px;
+  --navbar-height: 80px;
 
   /* ========================================
      TRANSITIONS
      ======================================== */
 
   --transition-fast: 150ms ease;
-  --transition-normal: 200ms ease;
-  --transition-slow: 300ms ease;
+  --transition-normal: 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 400ms cubic-bezier(0.16, 1, 0.3, 1);
 
   /* ========================================
      Z-INDEX
@@ -122,13 +127,13 @@
   --z-modal: 500;
   --z-toast: 1000;
 
-   /* Legacy theme aliases */
-   --primary-color: var(--color-primary);
-   --bg-primary: var(--color-background);
-   --bg-secondary: var(--color-surface);
-   --text-primary: var(--color-text-primary);
-   --text-secondary: var(--color-text-secondary);
-   --text-muted: var(--color-text-muted);
-   --border-color: var(--color-border);
-   --z-navbar: var(--z-sticky);
+  /* Legacy theme aliases */
+  --primary-color: var(--color-primary);
+  --bg-primary: var(--color-background);
+  --bg-secondary: var(--color-surface);
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+  --border-color: var(--color-border);
+  --z-navbar: var(--z-sticky);
 }
